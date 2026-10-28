@@ -64,13 +64,15 @@
   /* ---------- Hero ---------- */
   .hero { padding-block: 64px 48px; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px 64px; align-items: end; }
   @media (max-width: 960px) { .hero { grid-template-columns: 1fr; padding-block: 44px 36px; } }
-  .hero h1 { font-family: var(--display); font-variation-settings: "opsz" 96; font-weight: 600; font-size: clamp(2.6rem, 6.2vw, 5.4rem); line-height: 0.98; letter-spacing: -0.035em; margin: 18px 0 0; text-wrap: balance; }
+  .hero h1 { font-family: var(--display); font-variation-settings: "opsz" 96; font-weight: 600; font-size: clamp(2.5rem, 5.5vw, 4.8rem); line-height: 0.98; letter-spacing: -0.035em; margin: 18px 0 0; text-wrap: balance; }
   .hero h1 em { font-style: normal; color: var(--accent-ink); }
   .lede { font-size: 1.18rem; line-height: 1.5; color: var(--muted); max-width: 38em; margin: 26px 0 0; text-wrap: pretty; }
   .lede strong { color: var(--fg); font-weight: 600; }
   .hero-side { display: grid; gap: 14px; font-size: 0.95rem; color: var(--muted); border-left: 2px solid var(--accent); padding-left: 18px; }
   .hero-side b { color: var(--fg); font-weight: 600; display: block; }
   .hero-side .row { display: grid; gap: 2px; }
+  .hero-side .portrait { width: 200px; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 10px; border: 1px solid var(--rule); margin-bottom: 6px; }
+  @media (max-width: 960px) { .hero-side .portrait { width: 152px; } }
 
   /* ---------- Note-to-facts widget ---------- */
   .extract { margin-top: 56px; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); border: 1px solid var(--rule); background: var(--panel); border-radius: 6px; overflow: hidden; }
@@ -88,7 +90,9 @@
   .facts li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; align-items: center; border: 1px solid var(--rule); border-radius: 5px; padding: 8px 12px; font-family: var(--mono); font-size: 0.8rem; min-width: 0; transition: border-color .35s, background .35s, transform .35s; }
   .facts li .k { color: var(--muted); }
   .facts li .v { color: var(--fg); font-weight: 500; overflow-wrap: anywhere; }
-  .facts li .c { color: var(--faint); font-variant-numeric: tabular-nums; grid-row: span 2; text-align: right; }
+  .facts li .c { color: var(--faint); font-variant-numeric: tabular-nums; grid-row: span 3; text-align: right; }
+  .facts li .code { font-size: 0.72rem; color: var(--accent-ink); letter-spacing: 0.01em; margin-top: 1px; }
+  .facts li .code i { font-style: normal; color: var(--faint); }
   .facts li.on { border-color: var(--accent); background: var(--accent-soft); transform: translateX(4px); }
   .facts li.neg .v { text-decoration: line-through; text-decoration-color: var(--accent); text-decoration-thickness: 2px; }
   .extract .foot { grid-column: 1 / -1; border-top: 1px solid var(--rule); padding: 10px 24px; font-size: 0.8rem; color: var(--faint); font-family: var(--mono); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
@@ -102,6 +106,10 @@
   @media (max-width: 760px) { .numbers div:nth-child(3) { border-left: 0; padding-left: 0; } .numbers div:nth-child(n+3) { border-top: 1px solid var(--rule); } }
   .numbers b { display: block; font-family: var(--display); font-variation-settings: "opsz" 96; font-weight: 600; font-size: clamp(1.9rem, 3.4vw, 2.8rem); letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; }
   .numbers span { display: block; margin-top: 8px; font-size: 0.86rem; color: var(--muted); line-height: 1.35; }
+  .marks { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 22px; padding: 18px 0 6px; border-bottom: 1px solid var(--rule); }
+  .marks .lbl { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); flex-basis: 100%; }
+  @media (min-width: 961px) { .marks .lbl { flex-basis: auto; margin-right: 6px; } }
+  .marks span:not(.lbl) { font-family: var(--display); font-variation-settings: "opsz" 96; font-weight: 700; font-size: 1.02rem; letter-spacing: -0.02em; color: var(--muted); white-space: nowrap; opacity: 0.85; }
 
   /* ---------- Sections ---------- */
   section { padding-block: 88px 0; }
@@ -143,8 +151,9 @@
   .threads b { display: block; color: var(--fg); font-weight: 600; margin-bottom: 4px; }
 
   /* Building */
-  .projects { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
-  @media (max-width: 960px) { .projects { grid-template-columns: 1fr; } }
+  .projects { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+  @media (max-width: 1100px) { .projects { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .projects { grid-template-columns: 1fr; } }
   .proj { background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; padding: 22px 22px 20px; display: grid; gap: 10px; align-content: start; min-width: 0; transition: border-color .2s, transform .2s; }
   .proj:hover { border-color: var(--accent); transform: translateY(-2px); }
   @media (prefers-reduced-motion: reduce) { .proj, .proj:hover { transition: none; transform: none; } }
@@ -280,13 +289,14 @@
   <header class="hero">
     <div>
       <p class="eyebrow"><b>Pharm.D.</b> · Clinical informatics · Marblehead, Massachusetts</p>
-      <h1>Clinical notes are the richest data in medicine. <em>I make them usable.</em></h1>
-      <p class="lede">I spent eleven years as a hospital pharmacist, then eighteen building terminology services, decision support, and natural-language-processing products for health systems and life-sciences research. <strong>Today I lead a clinical notes program at a real-world data company</strong>, turning free text into facts researchers can query.</p>
+      <h1>Healthcare’s richest data is buried in clinical notes. <em>I make it usable.</em></h1>
+      <p class="lede">Most of what a clinician knows about a patient never lands in a structured field. It lives in the note. <strong>I lead a program that turns those notes into facts researchers can query</strong>, after eleven years as a hospital pharmacist and eighteen building terminology, decision-support, and NLP products for health systems and life-sciences research.</p>
     </div>
     <div class="hero-side">
+      <img class="portrait" src="img/john.jpg" alt="John Doole" width="576" height="720" loading="eager" decoding="async">
       <div class="row"><b>Currently</b>Clinical Notes Program Lead, TriNetX</div>
       <div class="row"><b>Before</b>Director of Informatics · Partners HealthCare · Mass General · Boston Medical Center</div>
-      <div class="row"><b>Also</b>MFA in nonfiction. Applied Agentic AI, MIT Professional Education. Coached CrossFit and Olympic weightlifting for a decade. Builds iOS apps on weekends.</div>
+      <div class="row"><b>Also</b>MFA in nonfiction. Applied Agentic AI, MIT Professional Education. Coached CrossFit and Olympic weightlifting for a decade. Builds iOS apps on weekends; the latest is patent pending and in final App Store review.</div>
     </div>
   </header>
 
@@ -294,20 +304,21 @@
     <div class="note">
       <div class="head"><p class="eyebrow">Clinical note · synthetic example</p><p class="eyebrow">input</p></div>
       <p class="hdr">ONCOLOGY CLINIC FOLLOW-UP — 2026-03-14 — PT: [synthetic]</p>
-      <p>62 y/o F with stage IV NSCLC, <mark data-f="1">EGFR exon 19 deletion</mark> on tissue NGS, s/p 4 cycles osimertinib. Reports fatigue but ambulatory and capable of light work, <mark data-f="2">ECOG PS 1</mark>. <mark data-f="3">Never smoker</mark>. <mark data-f="4">Denies chest pain</mark> or hemoptysis. Mood screen today <mark data-f="5">PHQ-9 = 14</mark>, discussed referral. Spirometry stable; <mark data-f="6">FeNO 42 ppb</mark>. Continue current regimen, restage in 8 weeks.</p>
+      <p>62 y/o F with stage IV NSCLC, <mark data-f="1">EGFR exon 19 deletion</mark> on tissue NGS, s/p 4 cycles <mark data-f="2">osimertinib</mark>. Reports fatigue but ambulatory and capable of light work, <mark data-f="3">ECOG PS 1</mark>. <mark data-f="4">Never smoker</mark>. <mark data-f="5">Denies chest pain</mark> or hemoptysis. Mood screen today <mark data-f="6">PHQ-9 = 14</mark>, discussed referral. Spirometry stable; <mark data-f="7">FeNO 42 ppb</mark>. Continue current regimen, restage in 8 weeks.</p>
     </div>
     <div>
       <div class="head"><p class="eyebrow">Extracted facts</p><p class="eyebrow">output</p></div>
       <ul class="facts">
-        <li data-f="1"><span class="k">biomarker</span><span class="c">0.91</span><span class="v">EGFR ex19del · positive</span></li>
-        <li data-f="2"><span class="k">performance_status</span><span class="c">0.96</span><span class="v">ECOG 1</span></li>
-        <li data-f="3"><span class="k">smoking_status</span><span class="c">0.95</span><span class="v">never smoker</span></li>
-        <li data-f="4" class="neg"><span class="k">symptom · negated</span><span class="c">0.93</span><span class="v">chest pain</span></li>
-        <li data-f="5"><span class="k">clinical_scale</span><span class="c">0.97</span><span class="v">PHQ-9 = 14 · moderate</span></li>
-        <li data-f="6"><span class="k">lab</span><span class="c">0.97</span><span class="v">FeNO 42 ppb</span></li>
+        <li data-f="1"><span class="k">biomarker</span><span class="c">0.91</span><span class="v">EGFR ex19del · positive</span><span class="code"><i>LOINC</i> 55764-5</span></li>
+        <li data-f="2"><span class="k">medication</span><span class="c">0.98</span><span class="v">osimertinib</span><span class="code"><i>RxNorm</i> 1721560</span></li>
+        <li data-f="3"><span class="k">performance_status</span><span class="c">0.96</span><span class="v">ECOG 1</span><span class="code"><i>SNOMED CT</i> 422512005 · <i>LOINC</i> 89247-1</span></li>
+        <li data-f="4"><span class="k">smoking_status</span><span class="c">0.95</span><span class="v">never smoker</span><span class="code"><i>SNOMED CT</i> 266919005 · <i>LOINC</i> 72166-2</span></li>
+        <li data-f="5" class="neg"><span class="k">symptom · negated</span><span class="c">0.93</span><span class="v">chest pain</span><span class="code"><i>SNOMED CT</i> 29857009</span></li>
+        <li data-f="6"><span class="k">clinical_scale</span><span class="c">0.97</span><span class="v">PHQ-9 = 14 · moderate</span><span class="code"><i>LOINC</i> 44261-6</span></li>
+        <li data-f="7"><span class="k">lab</span><span class="c">0.97</span><span class="v">FeNO 42 ppb</span><span class="code"><i>LOINC</i> 96269-6</span></li>
       </ul>
     </div>
-    <div class="foot"><span>span → concept → assertion → confidence</span><span>no real patient data</span></div>
+    <div class="foot"><span>span → concept → code → assertion → confidence</span><span>no real patient data</span></div>
   </div>
 
   <div class="numbers" aria-label="At a glance">
@@ -315,6 +326,10 @@
     <div><b>11 yrs</b><span>hospital pharmacist before that, at the bedside and the bench</span></div>
     <div><b>4 + 8</b><span>peer-reviewed papers, and posters and talks, JAMIA to AMIA</span></div>
     <div><b>2</b><span>graduate degrees: Doctor of Pharmacy, MFA in nonfiction</span></div>
+  </div>
+  <div class="marks" aria-label="Institutions">
+    <span class="lbl">Worked, taught, or studied at</span>
+    <span>TriNetX</span><span>Mass General Brigham</span><span>Boston Medical Center</span><span>Tufts Medical Center</span><span>MCPHS</span><span>Boston College</span><span>MIT</span>
   </div>
 
   <section id="now">
@@ -407,14 +422,14 @@
     </div>
     <div class="projects">
       <article class="proj">
-        <p class="eyebrow">iOS · computer vision · 2025 – 2026</p>
+        <p class="eyebrow">iOS · computer vision · patent pending</p>
         <h3>LiceLens</h3>
-        <p>Screens scalp and comb images for head lice with an on-device model. I built the dataset, trained and evaluated the model, wrote the app and its narrated tutorial, and submitted it to App Review in October 2026. Provisional patent filed.</p>
+        <p>Screens photos for head lice with an on-device model. I built the dataset, trained and evaluated the model, wrote the app and its narrated tutorial, and filed the utility patent application in October 2026. In final App Store review, releasing October 2026.</p>
         <p class="stack">Swift · SwiftUI · Core ML · PyTorch</p>
       </article>
       <article class="proj">
         <p class="eyebrow">Web · 2025 –</p>
-        <h3>The Pawtriarchy</h3>
+        <h3>Family hub</h3>
         <p>A password-protected family hub: recipes with star ratings, a shared calendar, and three generations of memoirs, including two grandparents' and my own. Built from scratch and deployed the same weekend.</p>
         <p class="stack">Flask · Postgres · Render</p>
       </article>
@@ -423,6 +438,12 @@
         <h3>Competitive Mastery</h3>
         <p>An athlete-development engine with persona-driven coaching avatars and voice simulation, co-founded with a partner. Proof of concept in progress.</p>
         <p class="stack">LLM personas · voice synthesis</p>
+      </article>
+      <article class="proj">
+        <p class="eyebrow">Web · 2026</p>
+        <h3>This site</h3>
+        <p>The <a href="#space">Map</a> below is an embedding projector over my own career: 111 nodes scored by hand on nine dimensions, PCA in the browser, a hand-drawn knowledge graph. No libraries, one HTML file. The first thing I shipped for an audience was a fundraising site in 2010; this is the latest.</p>
+        <p class="stack">Vanilla JS · Canvas · Render</p>
       </article>
     </div>
   </section>
@@ -619,10 +640,10 @@
       ['localllm', 'build', 'Local models: Ollama, litellm, LangGraph', '2024 –', 2024, 'Running open models at home and learning the agent frameworks before using them at work.', 0, [0, 0, 0, .8, 0, .9, .1, .2, 0]],
       ['licelens', 'build', 'LiceLens', '2025 – 2026', 2025, 'iOS app that screens scalp and comb images for head lice with an on-device model. Submitted to App Review October 2026.', 1, [.3, 0, 0, .5, .3, 1, .3, .1, 0]],
       ['licemodel', 'build', 'LiceLens dataset and Core ML model', '2025 – 2026', 2025, 'Built the dataset, trained and evaluated the model, shipped it on-device.', 0, [.2, .1, 0, .6, .1, 1, .4, 0, 0]],
-      ['patent', 'build', 'Provisional patent, LiceLens', '2025', 2025, 'Filed on the scalp-scan method.', 0, [.2, 0, 0, .4, .6, .4, .5, 0, 0]],
+      ['patent', 'build', 'Patent application, LiceLens', '2025 – 2026', 2025, 'Provisional filed October 2025; utility application filed October 2026. Patent pending.', 0, [.2, 0, 0, .4, .6, .4, .5, 0, 0]],
       ['tutorial', 'build', 'Narrated app tutorial', '2026', 2026, 'A voiced walkthrough over real app screens.', 0, [0, 0, 0, .3, .2, .8, 0, .6, 0]],
       ['scales', 'build', 'Clinical scale extraction agents', '2025', 2025, 'Multi-agent pipeline that extracts, validates, and ranks PHQ-9 and ECOG scores from narrative.', 0, [.2, .2, 0, 1, .1, .8, .2, 0, 0]],
-      ['pawtriarchy', 'build', 'The Pawtriarchy, a family hub', '2025 –', 2025, 'A password-protected family site with recipes, a shared calendar, and three generations of memoirs. Flask and Postgres on Render.', 0, [0, 0, 0, 0, .1, 1, 0, .5, 0]],
+      ['pawtriarchy', 'build', 'Family hub site', '2025 –', 2025, 'A password-protected family site with recipes, a shared calendar, and three generations of memoirs. Flask and Postgres on Render.', 0, [0, 0, 0, 0, .1, 1, 0, .5, 0]],
       ['compmastery', 'build', 'Competitive Mastery', '2026 –', 2026, 'Athlete-development engine with persona-driven coaching avatars and voice simulation. Proof of concept in progress.', 0, [0, 0, 0, .7, .6, .7, 0, .3, .6]],
       ['swift', 'build', 'Swift · SwiftUI · Core ML · PyTorch', '2025 –', 2025, 'The weekend stack.', 0, [0, 0, 0, .5, 0, 1, 0, 0, 0]],
       ['mcphsfac', 'teach', 'Associate faculty, MCPHS', '2001 – 2003', 2001, 'Teaching pharmacy students aseptic technique and compounding while practicing.', 0, [.7, 0, 0, 0, .1, 0, .1, 1, 0]],
