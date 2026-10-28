@@ -1,0 +1,1050 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>John Doole</title>
+<meta name="description" content="John Doole: pharmacist turned clinical informatics and NLP lead. Eighteen years turning clinical text into usable data for health systems and life-sciences research.">
+<meta property="og:title" content="John Doole">
+<meta property="og:description" content="Clinical notes are the richest data in medicine. I make them usable.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230e1418'/%3E%3Cpath d='M14 18h20v18a10 10 0 0 1-20 0' fill='none' stroke='%23fff' stroke-width='6'/%3E%3Ccircle cx='46' cy='44' r='6' fill='%232a4bff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  /* Direction A, "Signal": a Swiss one-pager. Giant display headline, mono chart labels, a 12-column grid
+     that collapses to one column; one accent (signal blue) spent on the note-to-facts widget and links. */
+  :root {
+    --bg: #f5f7f9;
+    --panel: #ffffff;
+    --fg: #0e1418;
+    --muted: #596670;
+    --faint: #98a4ad;
+    --rule: #dde3e8;
+    --accent: #2a4bff;
+    --accent-ink: #1d37c4;
+    --accent-soft: #e6ebff;
+    --mark: #fff3b0;
+    --display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+    --body: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
+    --mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0b0f14; --panel: #121820; --fg: #e9edf1; --muted: #a3afb9; --faint: #67737d; --rule: #222b35;
+      --accent: #7a93ff; --accent-ink: #a3b4ff; --accent-soft: #1a2342; --mark: #3b3a1a; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0b0f14; --panel: #121820; --fg: #e9edf1; --muted: #a3afb9; --faint: #67737d; --rule: #222b35;
+    --accent: #7a93ff; --accent-ink: #a3b4ff; --accent-soft: #1a2342; --mark: #3b3a1a; color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent-ink); text-decoration: none; }
+  a:hover, a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+  ::selection { background: var(--accent); color: #fff; }
+
+  .wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .eyebrow { font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); margin: 0; }
+  .eyebrow b { color: var(--accent-ink); font-weight: 500; }
+
+  /* ---------- Nav ---------- */
+  body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+  nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--rule); }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 56px; }
+  .brand { font-family: var(--display); font-weight: 600; font-size: 1.05rem; letter-spacing: -0.01em; color: var(--fg); display: flex; align-items: center; gap: 10px; }
+  .brand i { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); display: inline-block; }
+  nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 22px; font-size: 0.9rem; font-weight: 500; }
+  nav ul a { color: var(--muted); }
+  nav ul a:hover { color: var(--fg); text-decoration: none; }
+  @media (max-width: 640px) { nav ul { gap: 14px; font-size: 0.84rem; } nav ul li:nth-child(2) { display: none; } }
+
+  /* ---------- Hero ---------- */
+  .hero { padding-block: 64px 48px; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px 64px; align-items: end; }
+  @media (max-width: 960px) { .hero { grid-template-columns: 1fr; padding-block: 44px 36px; } }
+  .hero h1 { font-family: var(--display); font-variation-settings: "opsz" 96; font-weight: 600; font-size: clamp(2.6rem, 6.2vw, 5.4rem); line-height: 0.98; letter-spacing: -0.035em; margin: 18px 0 0; text-wrap: balance; }
+  .hero h1 em { font-style: normal; color: var(--accent-ink); }
+  .lede { font-size: 1.18rem; line-height: 1.5; color: var(--muted); max-width: 38em; margin: 26px 0 0; text-wrap: pretty; }
+  .lede strong { color: var(--fg); font-weight: 600; }
+  .hero-side { display: grid; gap: 14px; font-size: 0.95rem; color: var(--muted); border-left: 2px solid var(--accent); padding-left: 18px; }
+  .hero-side b { color: var(--fg); font-weight: 600; display: block; }
+  .hero-side .row { display: grid; gap: 2px; }
+
+  /* ---------- Note-to-facts widget ---------- */
+  .extract { margin-top: 56px; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); border: 1px solid var(--rule); background: var(--panel); border-radius: 6px; overflow: hidden; }
+  @media (max-width: 960px) { .extract { grid-template-columns: 1fr; } }
+  .extract > div { min-width: 0; padding: 22px 24px 24px; }
+  .extract .note { border-right: 1px solid var(--rule); }
+  @media (max-width: 960px) { .extract .note { border-right: 0; border-bottom: 1px solid var(--rule); } }
+  .extract .head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+  .note p { font-family: var(--mono); font-size: 0.86rem; line-height: 1.75; margin: 0; color: var(--fg); overflow-wrap: anywhere; }
+  .note p + p { margin-top: 10px; }
+  .note .hdr { color: var(--faint); }
+  mark { background: var(--mark); color: inherit; padding: 1px 3px; border-radius: 3px; transition: background .35s, box-shadow .35s; box-shadow: 0 0 0 0 transparent; }
+  mark.on { background: var(--accent-soft); box-shadow: 0 0 0 2px var(--accent); }
+  .facts { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .facts li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; align-items: center; border: 1px solid var(--rule); border-radius: 5px; padding: 8px 12px; font-family: var(--mono); font-size: 0.8rem; min-width: 0; transition: border-color .35s, background .35s, transform .35s; }
+  .facts li .k { color: var(--muted); }
+  .facts li .v { color: var(--fg); font-weight: 500; overflow-wrap: anywhere; }
+  .facts li .c { color: var(--faint); font-variant-numeric: tabular-nums; grid-row: span 2; text-align: right; }
+  .facts li.on { border-color: var(--accent); background: var(--accent-soft); transform: translateX(4px); }
+  .facts li.neg .v { text-decoration: line-through; text-decoration-color: var(--accent); text-decoration-thickness: 2px; }
+  .extract .foot { grid-column: 1 / -1; border-top: 1px solid var(--rule); padding: 10px 24px; font-size: 0.8rem; color: var(--faint); font-family: var(--mono); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  @media (prefers-reduced-motion: reduce) { mark, .facts li { transition: none; } .facts li.on { transform: none; } }
+
+  /* ---------- Numbers ---------- */
+  .numbers { margin-top: 20px; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  @media (max-width: 760px) { .numbers { grid-template-columns: repeat(2, 1fr); } }
+  .numbers div { padding: 22px 18px 22px 0; min-width: 0; }
+  .numbers div + div { border-left: 1px solid var(--rule); padding-left: 18px; }
+  @media (max-width: 760px) { .numbers div:nth-child(3) { border-left: 0; padding-left: 0; } .numbers div:nth-child(n+3) { border-top: 1px solid var(--rule); } }
+  .numbers b { display: block; font-family: var(--display); font-variation-settings: "opsz" 96; font-weight: 600; font-size: clamp(1.9rem, 3.4vw, 2.8rem); letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .numbers span { display: block; margin-top: 8px; font-size: 0.86rem; color: var(--muted); line-height: 1.35; }
+
+  /* ---------- Sections ---------- */
+  section { padding-block: 88px 0; }
+  @media (max-width: 760px) { section { padding-block: 60px 0; } }
+  .sec-head { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 20px 64px; align-items: end; margin-bottom: 36px; }
+  @media (max-width: 960px) { .sec-head { grid-template-columns: 1fr; gap: 10px; } }
+  .sec-head h2 { font-family: var(--display); font-variation-settings: "opsz" 96; font-weight: 600; font-size: clamp(2rem, 4vw, 3.2rem); letter-spacing: -0.03em; line-height: 1; margin: 10px 0 0; text-wrap: balance; }
+  .sec-head p { margin: 0; color: var(--muted); font-size: 1.08rem; max-width: 60ch; text-wrap: pretty; }
+
+  /* Now */
+  .cols3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+  @media (max-width: 960px) { .cols3 { grid-template-columns: 1fr; gap: 28px; } }
+  .col h3 { font-family: var(--display); font-weight: 600; font-size: 1.25rem; letter-spacing: -0.01em; margin: 0 0 10px; padding-top: 14px; border-top: 2px solid var(--fg); }
+  .col ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; font-size: 0.98rem; color: var(--muted); }
+  .col li strong { color: var(--fg); font-weight: 600; }
+  .col li { padding-left: 14px; position: relative; }
+  .col li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+  /* Path: horizontal timeline */
+  .rail { overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; padding-bottom: 14px; margin-left: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); margin-right: calc(-1 * max(16px, env(safe-area-inset-right, 0px))); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .rail ol { list-style: none; margin: 0; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(250px, 280px); gap: 18px; }
+  .rail li { scroll-snap-align: start; display: grid; grid-template-rows: auto auto 1fr; gap: 8px; border-top: 2px solid var(--rule); padding-top: 14px; position: relative; min-width: 0; }
+  .rail li::before { content: ""; position: absolute; top: -2px; left: 0; width: 44px; height: 2px; background: var(--accent); }
+  .rail li.now { border-top-color: var(--accent); }
+  .rail .yr { font-family: var(--mono); font-size: 0.78rem; color: var(--accent-ink); font-variant-numeric: tabular-nums; }
+  .rail h3 { font-family: var(--display); font-weight: 600; font-size: 1.08rem; letter-spacing: -0.01em; margin: 0; line-height: 1.25; }
+  .rail h3 small { display: block; font-family: var(--body); font-weight: 500; font-size: 0.86rem; color: var(--muted); margin-top: 2px; }
+  .rail p { margin: 0; font-size: 0.9rem; color: var(--muted); line-height: 1.5; }
+  .rail-hint { font-family: var(--mono); font-size: 0.74rem; color: var(--faint); margin-top: 6px; }
+  @media (max-width: 760px) {
+    .rail { overflow: visible; margin: 0; padding: 0; }
+    .rail ol { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: 1fr; }
+    .rail-hint { display: none; }
+  }
+  .threads { margin-top: 36px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+  @media (max-width: 960px) { .threads { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .threads { grid-template-columns: 1fr; } }
+  .threads div { font-size: 0.92rem; color: var(--muted); border-left: 2px solid var(--rule); padding-left: 14px; }
+  .threads b { display: block; color: var(--fg); font-weight: 600; margin-bottom: 4px; }
+
+  /* Building */
+  .projects { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+  @media (max-width: 960px) { .projects { grid-template-columns: 1fr; } }
+  .proj { background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; padding: 22px 22px 20px; display: grid; gap: 10px; align-content: start; min-width: 0; transition: border-color .2s, transform .2s; }
+  .proj:hover { border-color: var(--accent); transform: translateY(-2px); }
+  @media (prefers-reduced-motion: reduce) { .proj, .proj:hover { transition: none; transform: none; } }
+  .proj h3 { font-family: var(--display); font-weight: 600; font-size: 1.35rem; letter-spacing: -0.02em; margin: 0; }
+  .proj p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+  .proj .stack { font-family: var(--mono); font-size: 0.74rem; color: var(--accent-ink); margin-top: 6px; }
+
+  .pubs-head { margin-top: 56px; }
+  .pubs + .pubs-head { margin-top: 36px; }
+  .pubs { list-style: none; margin: 14px 0 0; padding: 0; }
+  .pubs li { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 4px 18px; padding: 14px 0; border-top: 1px solid var(--rule); font-size: 0.95rem; }
+  .pubs li:last-child { border-bottom: 1px solid var(--rule); }
+  .pubs .yr { font-family: var(--mono); font-size: 0.78rem; color: var(--faint); padding-top: 4px; font-variant-numeric: tabular-nums; }
+  .pubs cite { font-style: normal; font-weight: 600; display: block; }
+  .pubs span { color: var(--muted); font-size: 0.88rem; display: block; margin-top: 2px; }
+  @media (max-width: 560px) { .pubs li { grid-template-columns: 1fr; } }
+
+  /* Map: embedding projector */
+  :root { --c-pharm: #d9480f; --c-info: #2a4bff; --c-nlp: #0b9c87; --c-build: #c2255c; --c-res: #d99a00; --c-teach: #7048e8; --c-fit: #5c9e0a; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --c-pharm: #ff8a4c; --c-info: #7a93ff; --c-nlp: #3fd1b9; --c-build: #ff6b9d; --c-res: #ffc93c; --c-teach: #a98bff; --c-fit: #a3e635; } }
+  :root[data-theme="dark"] { --c-pharm: #ff8a4c; --c-info: #7a93ff; --c-nlp: #3fd1b9; --c-build: #ff6b9d; --c-res: #ffc93c; --c-teach: #a98bff; --c-fit: #a3e635; }
+  .space { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); border: 1px solid var(--rule); background: var(--panel); border-radius: 8px; overflow: hidden; }
+  @media (max-width: 960px) { .space { grid-template-columns: 1fr; } }
+  .space { align-items: start; }
+  .space .stage { position: relative; min-width: 0; display: grid; border-right: 1px solid var(--rule); background:
+      radial-gradient(ellipse at 50% 40%, color-mix(in srgb, var(--accent-soft) 55%, transparent), transparent 70%); }
+  @media (max-width: 960px) { .space .stage { border-right: 0; border-bottom: 1px solid var(--rule); } }
+  .space canvas { display: block; width: 100%; height: 620px; cursor: grab; touch-action: none; }
+  .space canvas.drag { cursor: grabbing; }
+  .space canvas.pt { cursor: pointer; }
+  @media (max-width: 960px) { .space canvas { height: 460px; } }
+  .space .hud { position: absolute; left: 16px; top: 14px; right: 16px; display: flex; justify-content: space-between; gap: 12px; pointer-events: none; }
+  .space .hud .eyebrow { pointer-events: auto; }
+  .space .ctl { position: absolute; right: 12px; bottom: 12px; display: flex; gap: 6px; }
+  .space .ctl button { width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--rule); background: var(--panel); color: var(--fg); font-family: var(--mono); font-size: 0.9rem; cursor: pointer; }
+  .space .ctl button:hover { border-color: var(--accent); color: var(--accent-ink); }
+  .space .hint { position: absolute; left: 16px; bottom: 62px; font-family: var(--mono); font-size: 0.72rem; color: var(--faint); pointer-events: none; }
+  .space .bar-ctl { position: absolute; left: 12px; right: 12px; bottom: 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .space .bar-ctl .yr { flex: 1 1 220px; display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .space .bar-ctl input[type="range"] { flex: 1; min-width: 0; accent-color: var(--accent); }
+  .space .bar-ctl .ylab { font-family: var(--mono); font-size: 0.74rem; color: var(--accent-ink); min-width: 9ch; }
+  .space .bar-ctl button { height: 32px; padding: 0 12px; border-radius: 6px; border: 1px solid var(--rule); background: var(--panel); color: var(--muted); font-family: var(--mono); font-size: 0.76rem; cursor: pointer; }
+  .space .bar-ctl button:hover { border-color: var(--accent); color: var(--accent-ink); }
+  .space .bar-ctl button[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+  .space .bar-ctl .seg { display: inline-flex; }
+  .space .bar-ctl .seg button:first-child { border-radius: 6px 0 0 6px; }
+  .space .bar-ctl .seg button:last-child { border-radius: 0 6px 6px 0; margin-left: -1px; }
+  .space .bar-ctl .play { width: 32px; padding: 0; }
+  .space .ctl { bottom: 56px; }
+  .space:fullscreen, .space.fs { position: fixed; inset: 0; z-index: 50; border: 0; border-radius: 0; background: var(--bg); height: 100vh; height: 100dvh; grid-template-rows: 1fr; align-items: stretch; }
+  .space:fullscreen .stage, .space.fs .stage { background: var(--panel); }
+  .space:fullscreen canvas, .space.fs canvas { height: 100vh; height: 100dvh; }
+  .space:fullscreen .panel, .space.fs .panel { max-height: 100vh; max-height: 100dvh; padding-top: max(20px, env(safe-area-inset-top, 0px)); }
+  @media (max-width: 960px) { .space:fullscreen, .space.fs { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) minmax(0, 42vh); } .space:fullscreen canvas, .space.fs canvas { height: 100%; } .space:fullscreen .panel, .space.fs .panel { max-height: none; } }
+  .space .bridges { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+  .space .bridges .lab { font-family: var(--mono); font-size: 0.72rem; color: var(--faint); margin: 6px 0 2px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .space .bridges button { width: 100%; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 10px; border: 1px solid var(--rule); border-radius: 6px; background: transparent; color: var(--fg); text-align: left; padding: 9px 11px; font: inherit; font-size: 0.88rem; cursor: pointer; }
+  .space .bridges button:hover { border-color: var(--accent); background: var(--accent-soft); }
+  .space .bridges button .pair { display: inline-flex; gap: 3px; }
+  .space .bridges button .pair i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+  .space .pairv { border-top: 2px solid var(--fg); padding-top: 14px; display: grid; gap: 10px; }
+  .space .pairv .ends { display: grid; gap: 6px; }
+  .space .pairv .ends button { display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 10px; align-items: center; border: 0; background: transparent; color: var(--fg); font: inherit; font-family: var(--display); font-weight: 600; font-size: 1.05rem; letter-spacing: -0.01em; text-align: left; padding: 2px 0; cursor: pointer; }
+  .space .pairv .ends i { width: 9px; height: 9px; border-radius: 50%; background: var(--sw); display: inline-block; }
+  .space .pairv .why { margin: 0; color: var(--fg); font-size: 0.98rem; text-wrap: pretty; }
+  .space .pairv .stat { font-family: var(--mono); font-size: 0.74rem; color: var(--muted); }
+  .space .pairv .stat b { color: var(--accent-ink); font-weight: 500; }
+  .space .dims2 span b { position: relative; height: 5px; }
+  .space .dims2 span b i { position: absolute; left: 0; top: 0; height: 2px; }
+  .space .dims2 span b i + i { top: 3px; background: var(--sw2, var(--muted)); }
+  .space .mini { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--rule); border-radius: 999px; padding: 5px 11px; background: transparent; color: var(--muted); font-family: var(--mono); font-size: 0.72rem; cursor: pointer; }
+  .space .mini:hover { border-color: var(--accent); color: var(--accent-ink); }
+  .space .mini[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  @media (max-width: 640px) { .space .hint { display: none; } .space .ctl { bottom: 100px; } }
+  .space .panel { min-width: 0; padding: 20px 22px 22px; display: grid; gap: 16px; align-content: start; font-size: 0.93rem; max-height: 620px; overflow-y: auto; overscroll-behavior: contain; }
+  @media (max-width: 960px) { .space .panel { max-height: none; } }
+  .space .legend { display: flex; flex-wrap: wrap; gap: 6px; }
+  .space .legend button { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--rule); background: transparent; color: var(--muted); border-radius: 999px; padding: 5px 11px 5px 8px; font-family: var(--mono); font-size: 0.72rem; cursor: pointer; }
+  .space .legend button i { width: 9px; height: 9px; border-radius: 50%; background: var(--sw); display: inline-block; }
+  .space .legend button.off { opacity: 0.4; }
+  .space .legend button.off i { background: transparent; box-shadow: inset 0 0 0 1.5px var(--sw); }
+  .space input[type="search"] { width: 100%; border: 1px solid var(--rule); background: var(--bg); color: var(--fg); border-radius: 6px; padding: 9px 12px; font-family: var(--mono); font-size: 0.82rem; }
+  .space input[type="search"]:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+  .space .sel { border-top: 2px solid var(--fg); padding-top: 14px; display: grid; gap: 8px; }
+  .space .sel .cat { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sw, var(--faint)); }
+  .space .sel h3 { font-family: var(--display); font-weight: 600; font-size: 1.25rem; letter-spacing: -0.015em; line-height: 1.2; margin: 0; text-wrap: balance; }
+  .space .sel .yrs { font-family: var(--mono); font-size: 0.76rem; color: var(--accent-ink); }
+  .space .sel p { margin: 0; color: var(--muted); font-size: 0.93rem; text-wrap: pretty; }
+  .space .nn { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; }
+  .space .nn .lab { font-family: var(--mono); font-size: 0.72rem; color: var(--faint); margin: 10px 0 4px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .space .nn li button { width: 100%; display: grid; grid-template-columns: 10px minmax(0, 1fr) 44px; align-items: center; gap: 10px; border: 0; background: transparent; color: var(--fg); text-align: left; padding: 6px 4px; border-radius: 5px; font: inherit; font-size: 0.88rem; cursor: pointer; }
+  .space .nn li button:hover { background: var(--accent-soft); }
+  .space .nn li i { width: 8px; height: 8px; border-radius: 50%; background: var(--sw); display: inline-block; }
+  .space .nn li .d { font-family: var(--mono); font-size: 0.74rem; color: var(--faint); text-align: right; font-variant-numeric: tabular-nums; }
+  .space .nn li .bar { height: 2px; background: var(--rule); border-radius: 2px; margin-top: 4px; overflow: hidden; }
+  .space .nn li .bar b { display: block; height: 100%; background: var(--accent); }
+  .space .dims { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 16px; font-family: var(--mono); font-size: 0.68rem; color: var(--faint); margin-top: 6px; }
+  .space .dims span { display: grid; grid-template-columns: minmax(0, 1fr); gap: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .space .dims span b { height: 3px; background: var(--rule); border-radius: 2px; overflow: hidden; display: block; }
+  .space .dims span b i { display: block; height: 100%; background: var(--sw, var(--accent)); }
+  .space .empty { color: var(--muted); display: grid; gap: 10px; }
+  .space .empty strong { color: var(--fg); }
+
+  /* Contact */
+  .contact { padding-block: 96px 64px; }
+  .contact h2 { font-family: var(--display); font-variation-settings: "opsz" 96; font-weight: 600; font-size: clamp(2.4rem, 6vw, 5rem); letter-spacing: -0.035em; line-height: 0.98; margin: 10px 0 24px; text-wrap: balance; }
+  .contact h2 em { font-style: normal; color: var(--accent-ink); }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--fg); border-radius: 999px; padding: 12px 20px; font-weight: 600; font-size: 0.95rem; color: var(--fg); background: transparent; font-family: inherit; cursor: pointer; }
+  .btn.primary { background: var(--fg); color: var(--bg); }
+  .btn:hover { text-decoration: none; border-color: var(--accent); }
+  .btn.primary:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn .mono { font-family: var(--mono); font-weight: 400; font-size: 0.86rem; }
+  .contact p { color: var(--muted); max-width: 48ch; margin: 22px 0 0; }
+
+  footer { border-top: 1px solid var(--rule); padding-block: 22px 32px; font-family: var(--mono); font-size: 0.74rem; color: var(--faint); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; }
+</style>
+
+
+</head>
+<body>
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="John Doole, top of page"><i></i>John Doole</a>
+    <ul>
+      <li><a href="#now">Now</a></li>
+      <li><a href="#path">Path</a></li>
+      <li><a href="#building">Building</a></li>
+      <li><a href="#space">Map</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+  <header class="hero">
+    <div>
+      <p class="eyebrow"><b>Pharm.D.</b> · Clinical informatics · Marblehead, Massachusetts</p>
+      <h1>Clinical notes are the richest data in medicine. <em>I make them usable.</em></h1>
+      <p class="lede">I spent eleven years as a hospital pharmacist, then eighteen building terminology services, decision support, and natural-language-processing products for health systems and life-sciences research. <strong>Today I lead a clinical notes program at a real-world data company</strong>, turning free text into facts researchers can query.</p>
+    </div>
+    <div class="hero-side">
+      <div class="row"><b>Currently</b>Clinical Notes Program Lead, TriNetX</div>
+      <div class="row"><b>Before</b>Director of Informatics · Partners HealthCare · Mass General · Boston Medical Center</div>
+      <div class="row"><b>Also</b>MFA in nonfiction. Applied Agentic AI, MIT Professional Education. Coached CrossFit and Olympic weightlifting for a decade. Builds iOS apps on weekends.</div>
+    </div>
+  </header>
+
+  <div class="extract" aria-label="Example of clinical note extraction">
+    <div class="note">
+      <div class="head"><p class="eyebrow">Clinical note · synthetic example</p><p class="eyebrow">input</p></div>
+      <p class="hdr">ONCOLOGY CLINIC FOLLOW-UP — 2026-03-14 — PT: [synthetic]</p>
+      <p>62 y/o F with stage IV NSCLC, <mark data-f="1">EGFR exon 19 deletion</mark> on tissue NGS, s/p 4 cycles osimertinib. Reports fatigue but ambulatory and capable of light work, <mark data-f="2">ECOG PS 1</mark>. <mark data-f="3">Never smoker</mark>. <mark data-f="4">Denies chest pain</mark> or hemoptysis. Mood screen today <mark data-f="5">PHQ-9 = 14</mark>, discussed referral. Spirometry stable; <mark data-f="6">FeNO 42 ppb</mark>. Continue current regimen, restage in 8 weeks.</p>
+    </div>
+    <div>
+      <div class="head"><p class="eyebrow">Extracted facts</p><p class="eyebrow">output</p></div>
+      <ul class="facts">
+        <li data-f="1"><span class="k">biomarker</span><span class="c">0.91</span><span class="v">EGFR ex19del · positive</span></li>
+        <li data-f="2"><span class="k">performance_status</span><span class="c">0.96</span><span class="v">ECOG 1</span></li>
+        <li data-f="3"><span class="k">smoking_status</span><span class="c">0.95</span><span class="v">never smoker</span></li>
+        <li data-f="4" class="neg"><span class="k">symptom · negated</span><span class="c">0.93</span><span class="v">chest pain</span></li>
+        <li data-f="5"><span class="k">clinical_scale</span><span class="c">0.97</span><span class="v">PHQ-9 = 14 · moderate</span></li>
+        <li data-f="6"><span class="k">lab</span><span class="c">0.97</span><span class="v">FeNO 42 ppb</span></li>
+      </ul>
+    </div>
+    <div class="foot"><span>span → concept → assertion → confidence</span><span>no real patient data</span></div>
+  </div>
+
+  <div class="numbers" aria-label="At a glance">
+    <div><b>18 yrs</b><span>clinical informatics, from decision support to NLP</span></div>
+    <div><b>11 yrs</b><span>hospital pharmacist before that, at the bedside and the bench</span></div>
+    <div><b>4 + 8</b><span>peer-reviewed papers, and posters and talks, JAMIA to AMIA</span></div>
+    <div><b>2</b><span>graduate degrees: Doctor of Pharmacy, MFA in nonfiction</span></div>
+  </div>
+
+  <section id="now">
+    <div class="sec-head">
+      <div><p class="eyebrow">Now · 2024 to present</p><h2>Clinical text as a data product</h2></div>
+      <p>I lead the clinical notes program at TriNetX, a global real-world data network: the NLP that turns physician narrative into structured, queryable facts for life-sciences research. I run it end to end, from pricing and governance to the prototypes that set the engineering roadmap.</p>
+    </div>
+    <div class="cols3">
+      <div class="col">
+        <h3>Product</h3>
+        <ul>
+          <li><strong>Pilot to launched product.</strong> Defined the offerings, took pricing through sign-off, and wrote the launch brief for general availability.</li>
+          <li>Launched multimodal notes search, clinical text beside structured data in the query builder, and a workspace for reading notes on the platform.</li>
+          <li>Set the program's objectives and turned the monthly reporting slide into a live scorecard.</li>
+          <li>Own the data-governance case for commercializing extracted facts and the reference document behind every customer-facing claim.</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h3>Scale and quality</h3>
+        <ul>
+          <li><strong>Multiplied the footprint</strong> of contributing organizations and extracted facts, across three countries, in under a year.</li>
+          <li>Doubled the finished NLP pipelines across oncology biomarkers, performance status, smoking, cardiology, and pulmonary modules, each with measured precision.</li>
+          <li>Built the measurement layer: an accuracy inventory with reconciliation checks, a seller-facing data explorer, and the first extracted-versus-loaded gap audit.</li>
+          <li>Cleared a large medication-to-RxNorm mapping backlog without a language model, by reframing the problem to its distinct generic strings.</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h3>Prototypes that shipped</h3>
+        <ul>
+          <li><strong>Clinical note-search copilot</strong> on an LLM with Elasticsearch, demoed live at AMIA 2026; now the spec for the production port.</li>
+          <li>An assertion-extraction harness on an open-weight model that showed how much a cohort changes when negated mentions are removed.</li>
+          <li>A multi-agent RFI responder, a program assistant in Slack, a media-monitoring agent over trial registries and FDA feeds, and a de-identification design for the whole corpus.</li>
+          <li>Each one handed to engineering with a spec and tests.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="path">
+    <div class="sec-head">
+      <div><p class="eyebrow">Path · 2000 to 2024</p><h2>Bedside to data product</h2></div>
+      <p>Every job on this line is about the same problem from a different side: how clinical information gets recorded, normalized, and trusted. The pharmacy years are why the informatics years work.</p>
+    </div>
+    <div class="rail">
+      <ol>
+        <li><span class="yr">2000 – 2011</span><h3>Sterile Products Pharmacist<small>Massachusetts General Hospital</small></h3><p>Quality control and compatibility for IV and parenteral nutrition admixtures. Eleven years of seeing what actually gets written in a chart.</p></li>
+        <li><span class="yr">2003 – 2006</span><h3>Team Lead, Quality Management<small>Boston Medical Center</small></h3><p>Managed 35 direct reports; built the USP 797 compounding program and an admixture manufacturing line that paid for itself many times over.</p></li>
+        <li><span class="yr">2007 – 2011</span><h3>Pharmacist Knowledge Engineer<small>Partners HealthCare</small></h3><p>Curated the drug-drug interaction content used by every Partners clinical application. Co-authored the JAMIA paper on high-priority interactions for EHRs.</p></li>
+        <li><span class="yr">2011 – 2013</span><h3>Senior Business Analyst<small>Partners HealthCare</small></h3><p>Specifications for the enterprise longitudinal medication record and the analysis behind Meaningful Use certification.</p></li>
+        <li><span class="yr">2013 – 2014</span><h3>CrossFit and Weightlifting Coach<small>Full time, then on the side through 2024</small></h3><p>Two years out of informatics, coaching classes and teaching Olympic weightlifting clinics around New England. Changed more lives per hour than any job before or since.</p></li>
+        <li><span class="yr">2014 – 2015</span><h3>Informatics Pharmacist<small>Tufts Medical Center</small></h3><p>Cerner support, standardized pharmacy terminology, compounding software that removed TPN transcription errors, NICU order entry.</p></li>
+        <li><span class="yr">2015 – 2018</span><h3>Healthcare IT Consultant<small>Specialty pharmacy, via Signature Consultants</small></h3><p>Led a build team through requirements and design; RxNorm, RxTerms, and UMLS infrastructure for adherence and cost analytics.</p></li>
+        <li><span class="yr">2018 – 2021</span><h3>Clinical Informatics Specialist<small>TriNetX</small></h3><p>Medication and lab harmonization for every organization onboarded to the network: source data to RxNorm and LOINC, at scale, in SQL and Python.</p></li>
+        <li><span class="yr">2021 – 2024</span><h3>Director of Informatics<small>TriNetX</small></h3><p>Multidisciplinary team across operations, R&amp;D, and customer informatics. Stood up clinical note search and the first NLP products; set the vendor-versus-LLM direction.</p></li>
+        <li class="now"><span class="yr">2024 – now</span><h3>Clinical Notes Program Lead<small>TriNetX</small></h3><p>See above.</p></li>
+      </ol>
+    </div>
+    <p class="rail-hint">scroll sideways →</p>
+    <div class="threads">
+      <div><b>Teaching, throughout</b>Associate faculty at MCPHS (2001–03); adjunct assistant clinical professor at Northeastern (2008–13), precepting pharmacy students at BMC, Partners, and Tufts.</div>
+      <div><b>Research</b>Two Partners-Siemens grants: an active-medication algorithm for medication reconciliation, and pharmacogenomic drug-interaction decision support.</div>
+      <div><b>Education</b>Pharm.D., Massachusetts College of Pharmacy and Health Sciences. MFA in Creative Writing, Lesley University. Leadership for Change, Boston College.</div>
+      <div><b>Coaching</b>CrossFit since 2008 and coached it for a decade, including at CrossFit New England. Eight CrossFit and weightlifting certifications, a Reebok film, and two Boston Marathons run for charity.</div>
+    </div>
+
+    <div class="pubs-head"><p class="eyebrow">Peer-reviewed</p></div>
+    <ul class="pubs">
+      <li><span class="yr">2025</span><div><cite>A machine learning approach for automating review of a RxNorm medication mapping pipeline output</cite><span>Hüser M, Doole J, Pinho V, Rouhizadeh H, Teodoro D, Saiyed A, Palchuk MB. J Biomed Inform. 2025;170:104909.</span></div></li>
+      <li><span class="yr">2012</span><div><cite>High-priority drug-drug interactions for use in electronic health records</cite><span>Phansalkar S, Desai AA, Bell D, Yoshida E, Doole J, Czochanski M, Middleton B, Bates DW. J Am Med Inform Assoc. 2012;19(5):735-43.</span></div></li>
+      <li><span class="yr">2010</span><div><cite>Recurrent erythema multiforme triggered by progesterone sensitivity</cite><span>Nasabzadeh TJ, Stefanato CM, Doole JE, Radfar A, Bhawan J, Venna S. J Cutan Pathol. 2010;37:1164-1167.</span></div></li>
+      <li><span class="yr">2007</span><div><cite>Effect of Additive Selection on Calculated Aluminum Content of Parenteral Nutrient Solutions</cite><span>Smith BS, Kothari H, Hayes BD, Tataronis G, Hudlin M, Doole J, Hartman C. Am J Health-Syst Pharm. 2007;64(7):730-739.</span></div></li>
+    </ul>
+    <div class="pubs-head"><p class="eyebrow">Talks · posters</p></div>
+    <ul class="pubs">
+      <li><span class="yr">2026</span><div><cite>AMIA 2026 Annual Symposium</cite><span>Live demonstration of an LLM clinical note-search copilot inside a research query builder.</span></div></li>
+      <li><span class="yr">2026</span><div><cite>ISPOR Europe 2026, Vienna</cite><span>NLP-derived real-world data, booth demonstration.</span></div></li>
+      <li><span class="yr">2026</span><div><cite>AMIA Informatics Partnership Council webinar</cite><span>Careers in the secondary use of clinical data for research. Co-presenter, February 2026.</span></div></li>
+      <li><span class="yr">2025</span><div><cite>AMIA 2025 Annual Symposium, poster</cite><span>Structured codes plus keyword search over clinical notes: how much a research cohort grows when the two are combined.</span></div></li>
+      <li><span class="yr">2024</span><div><cite>AMIA 2024 Annual Symposium, poster</cite><span>Leveraging LLMs for rapid cross-lingual transfer learning in on-premise clinical NLP models. Co-author.</span></div></li>
+      <li><span class="yr">2024</span><div><cite>AMIA 2024 Pharmacoinformatics Workgroup panel</cite><span>Panelist: big data, AI, and the evolving role of pharmacists in informatics.</span></div></li>
+      <li><span class="yr">2023</span><div><cite>ICPE 2023, Halifax</cite><span>Turning Language Into Data: an introduction to natural language processing for pharmacoepidemiologists.</span></div></li>
+      <li><span class="yr">2023</span><div><cite>Clinical and Translational Science Ontology Workshop, Charleston</cite><span>Medication informatics on a federated real-world data network.</span></div></li>
+    </ul>
+  </section>
+
+  <section id="building">
+    <div class="sec-head">
+      <div><p class="eyebrow">Building · on my own time</p><h2>Things I ship myself</h2></div>
+      <p>I like to know how the thing works before I ask a team to build it. These are end-to-end: data, model, app, release.</p>
+    </div>
+    <div class="projects">
+      <article class="proj">
+        <p class="eyebrow">iOS · computer vision · 2025 – 2026</p>
+        <h3>LiceLens</h3>
+        <p>Screens scalp and comb images for head lice with an on-device model. I built the dataset, trained and evaluated the model, wrote the app and its narrated tutorial, and submitted it to App Review in October 2026. Provisional patent filed.</p>
+        <p class="stack">Swift · SwiftUI · Core ML · PyTorch</p>
+      </article>
+      <article class="proj">
+        <p class="eyebrow">Web · 2025 –</p>
+        <h3>The Pawtriarchy</h3>
+        <p>A password-protected family hub: recipes with star ratings, a shared calendar, and three generations of memoirs, including two grandparents' and my own. Built from scratch and deployed the same weekend.</p>
+        <p class="stack">Flask · Postgres · Render</p>
+      </article>
+      <article class="proj">
+        <p class="eyebrow">Sports AI · 2026 –</p>
+        <h3>Competitive Mastery</h3>
+        <p>An athlete-development engine with persona-driven coaching avatars and voice simulation, co-founded with a partner. Proof of concept in progress.</p>
+        <p class="stack">LLM personas · voice synthesis</p>
+      </article>
+    </div>
+  </section>
+
+
+  <section id="space">
+    <div class="sec-head">
+      <div><p class="eyebrow">Map · 2000 to now</p><h2>Twenty-six years, projected</h2></div>
+      <p>Every job, project, paper, talk, tool, and sport, scored by hand on nine dimensions and reduced to three with principal component analysis, in your browser. Things that are close here are close in kind: the pharmacy years sit on one side, the language models on the other, and terminology work runs between them. Drag to rotate. Click a point for what it links to and what it sits nearest. Scrub the year to watch it fill in, or press Tour.</p>
+    </div>
+    <div class="space">
+      <div class="stage">
+        <canvas id="space-canvas" aria-label="Interactive 3-D map of John Doole's career, roles and projects as points in an embedding space"></canvas>
+        <div class="hud"><p class="eyebrow">PCA · 9 → 3 · <b id="space-count"></b></p><p class="eyebrow" id="space-var"></p></div>
+        <div class="ctl" aria-label="Map controls"><button type="button" data-z="in" aria-label="Zoom in">+</button><button type="button" data-z="out" aria-label="Zoom out">−</button><button type="button" data-z="reset" aria-label="Reset view">⟲</button><button type="button" id="space-fs" aria-label="Full screen" title="Full screen">⤢</button></div>
+        <p class="hint">drag · rotate &nbsp; ⌘ + scroll · zoom &nbsp; click · inspect</p>
+        <div class="bar-ctl">
+          <div class="yr"><button type="button" class="play" id="space-play" aria-label="Play the years">▶</button><input type="range" id="space-year" min="2000" max="2026" step="1" value="2026" aria-label="Show items through this year"><span class="ylab" id="space-year-label">through now</span></div>
+          <span class="seg" role="group" aria-label="Layout"><button type="button" data-layout="pca" aria-pressed="true">Similarity</button><button type="button" data-layout="time" aria-pressed="false">Timeline</button></span>
+          <button type="button" id="space-links" aria-pressed="true">Links</button>
+          <button type="button" id="space-tour" aria-pressed="false">Tour</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="legend" id="space-legend" aria-label="Filter by kind"></div>
+        <input type="search" id="space-search" placeholder="search the map: rxnorm, llm, amia, crossfit…" aria-label="Search the map" autocomplete="off">
+        <div id="space-detail"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <p class="eyebrow">Contact</p>
+    <h2>If you work on clinical data, <em>I'd like to talk.</em></h2>
+    <div class="ctas">
+      <button class="btn primary" type="button" id="copy-email"><span class="mono" id="email">jdoole@gmail.com</span><span id="copy-label">copy</span></button>
+      <a class="btn" href="https://www.linkedin.com/in/johndoole-pharmd" target="_blank" rel="noopener">LinkedIn ↗</a>
+    </div>
+    <p>Based in Marblehead, Massachusetts, north of Boston. Happy to compare notes on NLP, terminology, real-world data, or what a pharmacist is doing writing FastAPI apps.</p>
+  </section>
+
+  <footer>
+    <span>© 2026 John Doole</span>
+    <span>Hand-built. No trackers, no cookies.</span>
+  </footer>
+</main>
+
+<script>
+  (function () {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var marks = Array.prototype.slice.call(document.querySelectorAll('mark[data-f]'));
+    var facts = Array.prototype.slice.call(document.querySelectorAll('.facts li[data-f]'));
+    var all = marks.concat(facts), n = marks.length, i = 0, timer = null;
+    function set(id, on) { all.forEach(function (el) { if (el.getAttribute('data-f') === id) el.classList.toggle('on', on); }); }
+    function step() { set(String(i + 1), false); i = (i + 1) % n; set(String(i + 1), true); }
+    function start() { if (timer || reduce || !n) return; set(String(i + 1), true); timer = setInterval(step, 1700); }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    var box = document.querySelector('.extract');
+    if (box && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { es.forEach(function (e) { e.isIntersecting ? start() : stop(); }); }, { threshold: 0.25 }).observe(box);
+    } else { start(); }
+    all.forEach(function (el) {
+      el.addEventListener('mouseenter', function () { stop(); all.forEach(function (x) { x.classList.remove('on'); }); set(el.getAttribute('data-f'), true); i = parseInt(el.getAttribute('data-f'), 10) - 1; });
+      el.addEventListener('mouseleave', start);
+    });
+
+    var btn = document.getElementById('copy-email'), em = document.getElementById('email'), lab = document.getElementById('copy-label');
+    if (btn && em && lab) {
+      btn.addEventListener('click', function () {
+        var text = em.textContent.trim();
+        var done = function () { lab.textContent = 'copied'; setTimeout(function () { lab.textContent = 'copy'; }, 1600); };
+        var fallback = function () {
+          try { var r = document.createRange(); r.selectNodeContents(em); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); lab.textContent = 'selected'; setTimeout(function () { lab.textContent = 'copy'; }, 1600); } catch (e) {}
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback); else fallback();
+      });
+    }
+  })();
+</script>
+
+<script>
+  /* Map: a small embedding projector. Each item is scored 0–1 on nine dimensions; PCA reduces them to
+     three; the canvas renders the projection with a perspective camera. Typed links between items are
+     drawn as edges. A year scrubber reveals the map chronologically. No libraries. */
+  (function () {
+    var DIMS = ['bedside', 'terminology', 'decision support', 'nlp · llm', 'product · leadership', 'building', 'research', 'teaching · writing', 'sport · coaching'];
+    var CATS = {
+      pharm: { name: 'Pharmacy', v: '--c-pharm' },
+      info:  { name: 'Informatics', v: '--c-info' },
+      nlp:   { name: 'NLP & AI', v: '--c-nlp' },
+      build: { name: 'Building', v: '--c-build' },
+      res:   { name: 'Research', v: '--c-res' },
+      teach: { name: 'Teaching', v: '--c-teach' },
+      fit:   { name: 'Coaching', v: '--c-fit' }
+    };
+    // id, category, label, years shown, start year (for the scrubber), detail, anchor, vector
+    var RAW = [
+      ['pharmd', 'pharm', 'Pharm.D., MCPHS', '2000', 2000, 'Doctor of Pharmacy, Massachusetts College of Pharmacy and Health Sciences.', 1, [1, .1, 0, 0, 0, 0, .2, .2, 0]],
+      ['mgh', 'pharm', 'Sterile Products Pharmacist, Mass General', '2000 – 2011', 2000, 'Quality control and compatibility for IV and parenteral nutrition admixtures. Eleven years of seeing what actually gets written in a chart.', 1, [1, .2, .1, 0, .1, 0, .3, .2, 0]],
+      ['nutrition', 'pharm', 'Nutrition support team, Boston Medical Center', '2001 – 2003', 2001, 'Three years at the bedside writing parenteral nutrition orders for patients who could not eat by mouth.', 0, [1, .1, 0, 0, .1, 0, .2, .1, 0]],
+      ['bmcqm', 'pharm', 'Team Lead, Quality Management, Boston Medical Center', '2003 – 2006', 2003, 'Managed 35 direct reports; built the USP 797 compounding program and an admixture manufacturing line.', 1, [.8, .2, 0, 0, .7, 0, .1, .3, 0]],
+      ['medsafety', 'pharm', 'Medication safety and Joint Commission audits', '2003 – 2006', 2003, 'Adverse-event reporting to the FDA, alert design for pharmacists, error tracking. Every fix went through the computer system, which is how informatics started.', 0, [.8, .2, .5, 0, .4, 0, .2, .1, 0]],
+      ['usp797', 'pharm', 'USP 797 compounding program', '2004', 2004, 'Stood up the sterile-compounding quality program at BMC when the standard was new.', 0, [.9, .3, 0, 0, .5, 0, .1, .1, 0]],
+      ['pnqc', 'pharm', 'Parenteral nutrition quality control', '2000 – 2011', 2000, 'Compatibility, stability, and additive calculations for TPN at scale.', 0, [1, .2, 0, 0, 0, 0, .3, 0, 0]],
+      ['alpaper', 'res', 'Aluminum content of parenteral nutrient solutions', '2007', 2007, 'Smith BS, Kothari H, Hayes BD, Tataronis G, Hudlin M, Doole J, Hartman C. Am J Health-Syst Pharm.', 0, [.8, .1, 0, 0, 0, 0, 1, .1, 0]],
+      ['emcase', 'res', 'Erythema multiforme and progesterone sensitivity', '2010', 2010, 'Case report, J Cutan Pathol. Nasabzadeh TJ, Stefanato CM, Doole JE, et al.', 0, [.6, 0, 0, 0, 0, 0, .9, 0, 0]],
+      ['pke', 'info', 'Pharmacist Knowledge Engineer, Partners HealthCare', '2007 – 2011', 2007, 'Curated the drug-drug interaction content used by every Partners clinical application.', 1, [.4, .8, .9, 0, .2, .2, .4, .1, 0]],
+      ['ddi', 'info', 'Drug-drug interaction knowledge base', '2007 – 2011', 2007, 'Enterprise interaction content: severity tiers, evidence grading, alert logic, and the quarterly meetings that settled disputes between sites.', 0, [.4, .8, 1, 0, .1, .2, .3, 0, 0]],
+      ['adherence', 'info', 'Medication adherence and persistence tools', '2009', 2009, 'Knowledge management at Partners: putting adherence data in front of prescribers.', 0, [.4, .6, .8, 0, .3, .3, .2, 0, 0]],
+      ['bwhsafety', 'pharm', "Brigham and Women's medication safety committee", '2008 – 2011', 2008, 'Enterprise representative and voting member.', 0, [.6, .2, .6, 0, .5, 0, .1, .1, 0]],
+      ['jamia', 'res', 'High-priority drug-drug interactions for EHRs', '2012', 2012, 'Phansalkar S, Desai AA, Bell D, Yoshida E, Doole J, Czochanski M, Middleton B, Bates DW. J Am Med Inform Assoc.', 0, [.3, .5, .8, 0, 0, 0, 1, .1, 0]],
+      ['grantmed', 'res', 'Grant: active-medication algorithm', '2009', 2009, 'Partners-Siemens grant. An algorithm for inferring the active medication list for medication reconciliation.', 0, [.4, .6, .7, .1, .1, .3, .8, 0, 0]],
+      ['grantpgx', 'res', 'Grant: pharmacogenomic decision support', '2010', 2010, 'Partners-Siemens grant. Drug-gene interaction alerts inside order entry.', 0, [.3, .6, .8, 0, 0, .2, .8, 0, 0]],
+      ['sba', 'info', 'Senior Business Analyst, Partners HealthCare', '2011 – 2013', 2011, 'Specifications for the enterprise longitudinal medication record; analysis behind Meaningful Use certification.', 1, [.2, .6, .7, 0, .5, .3, .1, .1, 0]],
+      ['lmr', 'info', 'Longitudinal medication record', '2011 – 2013', 2011, 'One medication history across inpatient, outpatient, and claims sources.', 0, [.3, .7, .6, 0, .4, .3, 0, .2, 0]],
+      ['mu', 'info', 'Meaningful Use certification', '2012', 2012, 'Gap analysis and measure logic for the enterprise EHR.', 0, [.1, .5, .7, 0, .4, .1, 0, 0, 0]],
+      ['coach', 'fit', 'CrossFit and weightlifting coach', '2013 – 2014 · part time to 2024', 2013, 'Two years full time between informatics jobs. Led classes and taught Olympic weightlifting clinics around New England; kept coaching on the side until 2024.', 1, [.1, 0, 0, 0, .4, 0, 0, .8, 1]],
+      ['cfne', 'fit', 'Coached at CrossFit New England', '2013 – 2014', 2013, 'One of the best-known affiliates in the sport.', 0, [0, 0, 0, 0, .2, 0, 0, .7, 1]],
+      ['clinics', 'fit', 'Olympic weightlifting clinics', '2013 – 2024', 2013, 'Snatch and clean-and-jerk clinics around New England.', 0, [0, 0, 0, 0, .1, 0, 0, .8, 1]],
+      ['reebok', 'fit', '"It\'s a Way of Life," a CrossFit film by Reebok', '2012', 2012, 'A CrossFit Games film sponsored by Reebok. Not the star, but in it.', 0, [0, 0, 0, 0, 0, 0, 0, .4, 1], 'https://www.youtube.com/watch?v=zu0y22lkIRw'],
+      ['cfoly', 'fit', 'CrossFit Olympic Weightlifting Certification', '2010', 2010, 'The first of the coaching certifications, October 2010.', 0, [0, 0, 0, 0, 0, 0, 0, .5, 1]],
+      ['usaw1', 'fit', 'USA Weightlifting Level 1', '2011', 2011, 'Sports performance coach certification.', 0, [0, 0, 0, 0, 0, 0, 0, .5, 1]],
+      ['cfl1', 'fit', 'CrossFit Level 1 Trainer', '2012', 2012, 'CF-L1, April 2012.', 0, [.1, 0, 0, 0, 0, 0, 0, .6, 1]],
+      ['cfpower', 'fit', 'CrossFit Powerlifting Trainer', '2012', 2012, 'Specialty course, August 2012.', 0, [0, 0, 0, 0, 0, 0, 0, .5, 1]],
+      ['risto', 'fit', 'Soviet System I, Risto Sports', '2012', 2012, 'Fundamentals of Soviet programming for weightlifting, September 2012.', 0, [0, 0, 0, 0, 0, 0, .2, .5, 1]],
+      ['cfmobility', 'fit', 'CrossFit Mobility Trainer', '2012', 2012, 'Specialty course, October 2012.', 0, [.2, 0, 0, 0, 0, 0, 0, .5, 1]],
+      ['attitude', 'fit', 'Attitude Nation Level 1', '2012', 2012, 'Weightlifting seminar, November 2012.', 0, [0, 0, 0, 0, 0, 0, 0, .5, 1]],
+      ['cfstrongman', 'fit', 'CrossFit Strongman Trainer', '2012', 2012, 'Specialty course, November 2012.', 0, [0, 0, 0, 0, 0, 0, 0, .5, 1]],
+      ['box', 'fit', 'BOX seminar, Ben Bergeron', '2012', 2012, 'Running an affiliate as a business.', 0, [0, 0, 0, 0, .7, 0, 0, .4, .8]],
+      ['usaw2', 'fit', 'USA Weightlifting Level 2 course', '2013', 2013, 'The week-long course at Millersville University. Never coached an athlete to Nationals, so the certification was never finished.', 0, [0, 0, 0, 0, .1, 0, .1, .5, 1]],
+      ['wellness', 'fit', 'Wellness coaching', '2013 – 2024', 2013, 'Coaching people through recovery and change, not just workouts.', 0, [.3, 0, 0, 0, .2, 0, 0, .7, .9]],
+      ['crossfit', 'fit', 'CrossFit, going on two decades', '2008 –', 2008, 'Started in 2008 and never really stopped.', 0, [.1, 0, 0, 0, 0, 0, 0, .1, 1]],
+      ['boston2005', 'fit', 'Boston Marathon 2005', '2005', 2005, 'Ran for Boston Medical Center.', 0, [.3, 0, 0, 0, 0, 0, 0, 0, 1]],
+      ['boston2010', 'fit', "Boston Marathon 2010, Tedy's Team", '2010', 2010, "Ran the 114th Boston Marathon for Tedy's Team, the stroke-awareness charity, and raised over $13,000.", 0, [.2, 0, 0, 0, .2, 0, 0, .3, 1]],
+      ['runforstroke', 'build', 'Run for Stroke', '2010', 2010, "A site and a series of videos built for the Tedy's Team fundraising run. The first thing I shipped for an audience.", 0, [.1, 0, 0, 0, .2, .7, 0, .6, .7]],
+      ['falmouth2011', 'fit', "Falmouth Road Race 2011, Tedy's Team", '2011', 2011, '', 0, [.1, 0, 0, 0, 0, 0, 0, .1, 1]],
+      ['martial', 'fit', 'Seven years of martial arts', '', 2000, '', 0, [0, 0, 0, 0, 0, 0, 0, .1, 1]],
+      ['college', 'fit', 'College soccer, baseball, and golf', '1990s', 2000, '', 0, [0, 0, 0, 0, 0, 0, 0, 0, 1]],
+      ['tufts', 'info', 'Informatics Pharmacist, Tufts Medical Center', '2014 – 2015', 2014, 'Cerner support, standardized pharmacy terminology, compounding software, NICU order entry.', 1, [.5, .7, .6, 0, .3, .3, 0, .2, 0]],
+      ['cerner', 'info', 'Cerner pharmacy build', '2014 – 2015', 2014, 'Order sentences, formulary, pump libraries, and NICU order entry.', 0, [.4, .5, .7, 0, .2, .4, 0, 0, 0]],
+      ['tpnsw', 'info', 'Compounding software, TPN transcription', '2015', 2015, 'Replaced hand transcription of TPN orders with software; removed a class of errors.', 0, [.6, .4, .5, 0, .2, .5, 0, 0, 0]],
+      ['consult', 'info', 'Healthcare IT Consultant, specialty pharmacy', '2015 – 2018', 2015, 'Led a build team through requirements and design for adherence and cost analytics.', 1, [.2, .8, .3, 0, .6, .5, 0, 0, 0]],
+      ['rxnorm', 'info', 'RxNorm · RxTerms · UMLS', '2015 –', 2015, 'Terminology infrastructure for medication analytics, reused at every stop since.', 0, [.1, 1, .2, .1, .1, .6, 0, 0, 0]],
+      ['atc', 'info', 'ATC medication class subsetting', '2016', 2016, 'Queries over the Anatomical Therapeutic Chemical system for decision support and sharper analytics.', 0, [.2, 1, .4, 0, 0, .5, .1, 0, 0]],
+      ['telepharm', 'pharm', 'Telepharmacy, up close', '2016', 2016, 'Watched pharmacists counsel patients remotely on specialty drugs while harmonizing the medication data underneath.', 0, [.6, .6, .1, 0, .2, .1, 0, .2, 0]],
+      ['cis', 'info', 'Clinical Informatics Specialist, TriNetX', '2018 – 2021', 2018, 'Medication and lab harmonization for every organization onboarded to the network.', 1, [.2, 1, .1, .1, .2, .6, 0, 0, 0]],
+      ['harmon', 'info', 'Medication and lab harmonization', '2018 – 2021', 2018, 'Source data to RxNorm and LOINC, at scale, in SQL and Python.', 0, [.2, 1, 0, .1, .1, .6, 0, 0, 0]],
+      ['sdoh', 'info', 'Social-determinants value sets', '2022', 2022, 'Curated LOINC and ICD-10-CM value sets for social determinants of health, as query targets and NLP targets.', 0, [.1, 1, .2, .3, .2, .1, .2, 0, 0]],
+      ['dirinfo', 'info', 'Director of Informatics, TriNetX', '2021 – 2024', 2021, 'Multidisciplinary team across operations, R&D, and customer informatics. Stood up clinical note search and the first NLP products.', 1, [.1, .6, .1, .6, 1, .3, .1, .2, 0]],
+      ['vendorllm', 'info', 'Vendor-versus-LLM direction', '2023', 2023, 'Set the strategy for when to buy an NLP engine and when to build on a language model.', 0, [0, .3, 0, .8, .9, .2, .1, 0, 0]],
+      ['notesearch1', 'info', 'Clinical note search, first version', '2022', 2022, 'The first product that let researchers query free text on the network. Wrote the SOPs, ran the feasibility requests, planned the Elasticsearch rollout.', 0, [0, .3, 0, .8, .5, .5, 0, 0, 0]],
+      ['chartabs', 'nlp', 'Chart abstraction for life sciences', '2022 – 2023', 2022, 'Scoped and ran chart-abstraction and classification projects for pharma clients.', 0, [.4, .3, 0, .6, .7, .1, .4, 0, 0]],
+      ['strategy', 'info', 'Three-year clinical NLP strategy', '2024', 2024, 'Presented to the C-suite in January 2024: search, targeted extraction, and the cost-benefit case for language models.', 0, [0, .3, 0, .7, 1, 0, .1, .3, 0]],
+      ['cts2023', 'teach', 'CTS Ontology Workshop 2023', '2023', 2023, 'Talk in Charleston: medication informatics on a federated real-world data network.', 0, [.1, 1, 0, .3, .3, 0, .4, .8, 0]],
+      ['icpe2023', 'teach', 'ICPE 2023, Halifax', '2023', 2023, '"Turning Language Into Data": an introduction to NLP and machine learning for pharmacoepidemiologists.', 0, [.2, .3, 0, .8, .1, 0, .5, .9, 0]],
+      ['cnplead', 'nlp', 'Clinical Notes Program Lead, TriNetX', '2024 – now', 2024, 'The NLP that turns physician narrative into structured, queryable facts, run end to end.', 1, [.1, .4, 0, 1, .9, .4, .2, .2, 0]],
+      ['vendorneg', 'nlp', 'Vendor renegotiation and managed services', '2024', 2024, 'Renegotiated NLP vendor licensing and moved document processing to managed services.', 0, [0, .2, 0, .3, 1, 0, 0, 0, 0]],
+      ['strategicmeds', 'info', 'Strategic medication concept list', '2024', 2024, 'A prioritized list of medication concepts that cut the latency from raw string to RxNorm.', 0, [.1, 1, 0, .2, .4, .4, .1, 0, 0]],
+      ['amia24poster', 'res', 'Cross-lingual transfer learning with LLMs', '2024', 2024, 'AMIA 2024 Annual Symposium poster, co-author: using an LLM to label training data for on-premise clinical NLP models in a new language.', 0, [0, .2, 0, 1, .1, .3, .9, .2, 0]],
+      ['amia24panel', 'teach', 'AMIA 2024 panel on pharmacoinformatics', '2024', 2024, 'Panelist, AMIA Pharmacoinformatics Workgroup: big data, AI, and the evolving role of pharmacists.', 0, [.4, .2, .1, .5, .3, 0, .4, .9, 0]],
+      ['multimodal', 'nlp', 'Multimodal notes search', '2025', 2025, 'Clinical notes searchable beside structured data in the platform query builder. First site live February 2025, then a document workspace for reading notes on the platform.', 0, [0, .3, 0, .8, .7, .6, .1, .1, 0]],
+      ['lucene', 'nlp', 'Lucene query craft', '2024 – 2025', 2024, 'Proximity, wildcard, and boolean patterns for clinical scales, biomarkers, and flares. The cheat sheet the team used.', 0, [0, .3, 0, .7, .1, .7, .2, .3, 0]],
+      ['presidio', 'nlp', 'PHI masking in the search UI', '2025', 2025, 'Runtime detection and blocking of identifiers in snippets and queries.', 0, [0, .2, 0, .7, .5, .5, .1, 0, 0]],
+      ['amia25poster', 'res', 'Structured codes plus keyword search', '2025', 2025, 'AMIA 2025 Annual Symposium poster: how much a cohort grows when keyword search over notes joins the structured query.', 0, [0, .4, 0, .7, .2, .3, .9, .2, 0]],
+      ['cnpagree', 'nlp', 'Clinical Notes Program agreements', '2025', 2025, 'The legal and cloud foundation for the program. First signed site in August 2025, then a pipeline of sites.', 0, [0, .1, 0, .4, 1, 0, 0, .3, 0]],
+      ['pilotlaunch', 'nlp', 'Pilot to launched product', '2026', 2026, 'Defined the offerings, took pricing through sign-off, wrote the launch brief for general availability.', 0, [0, .2, 0, .6, 1, .1, 0, .2, 0]],
+      ['governance', 'nlp', 'Data governance for extracted facts', '2025 – 2026', 2025, 'The case for commercializing NLP output, and the reference document behind every customer-facing claim.', 0, [0, .4, 0, .6, .8, 0, .1, .2, 0]],
+      ['okr', 'nlp', 'Live OKR scorecard', '2025 – 2026', 2025, 'Replaced the monthly reporting slide with objectives, key results, and a scorecard that reads from the pipelines.', 0, [0, .2, 0, .4, .9, .4, 0, 0, 0]],
+      ['oncopipe', 'nlp', 'Oncology biomarker pipelines', '2025 – 2026', 2025, 'EGFR, ALK, PD-L1 and friends, extracted with measured precision.', 0, [.2, .5, 0, 1, .3, .3, .4, 0, 0]],
+      ['perfpipe', 'nlp', 'Performance status and smoking pipelines', '2025 – 2026', 2025, 'ECOG, Karnofsky, smoking and alcohol status: the modifiers every oncology cohort needs.', 0, [.4, .3, 0, 1, .2, .3, .1, 0, 0]],
+      ['cardiopipe', 'nlp', 'Cardiology and pulmonary pipelines', '2026', 2026, 'Ejection fraction, NYHA class, spirometry and FeNO from narrative.', 0, [.1, .4, 0, 1, .5, .4, .2, 0, 0]],
+      ['accuracy', 'nlp', 'Accuracy inventory and reconciliation', '2026', 2026, 'One place that says how good each pipeline is, with checks that catch drift.', 0, [0, .4, 0, .8, .5, .5, .4, 0, 0]],
+      ['explorer', 'nlp', 'Seller-facing data explorer', '2026', 2026, 'An app for the commercial team to answer "do you have X" without filing a ticket.', 0, [0, .3, 0, .6, .5, .8, 0, 0, 0]],
+      ['gapaudit', 'nlp', 'Extracted-versus-loaded gap audit', '2026', 2026, 'The first measurement of what NLP produced versus what reached the product.', 0, [0, .5, 0, .7, .4, .5, .2, 0, 0]],
+      ['epicrx', 'nlp', 'Epic medication to RxNorm backlog', '2025', 2025, 'Cleared without a language model, by reframing the problem to its distinct generic strings.', 0, [.2, 1, 0, .3, .2, .6, 0, 0, 0]],
+      ['jbi2025', 'res', 'Automating review of an RxNorm mapping pipeline', '2025', 2025, 'Hüser M, Doole J, Pinho V, Rouhizadeh H, Teodoro D, Saiyed A, Palchuk MB. J Biomed Inform. 2025;170:104909. A machine-learning reviewer for medication-mapping output.', 0, [.2, 1, 0, .5, .1, .4, 1, 0, 0]],
+      ['n8n', 'nlp', 'Agentic medication mapper', '2025', 2025, 'A multi-agent workflow that cleans a medication string and maps it to an RxNorm ingredient, built to show the company what agents can do.', 0, [0, .8, 0, .8, .2, .9, .1, 0, 0]],
+      ['copilot', 'nlp', 'Clinical note-search copilot', '2026', 2026, 'LLM over Elasticsearch inside a research query builder. Demoed live at AMIA 2026; now the spec for the production port.', 0, [0, .2, 0, 1, .4, .8, .3, .2, 0]],
+      ['assertion', 'nlp', 'Assertion extraction on an open-weight model', '2026', 2026, 'A harness that labels negated, hypothetical, and historical mentions.', 0, [0, .2, 0, 1, .1, .7, .5, 0, 0]],
+      ['negation', 'nlp', 'Negation and cohort shift', '2026', 2026, 'How much a cohort changes when negated mentions are removed. More than people expect.', 0, [.1, .2, 0, .9, .1, .4, .7, 0, 0]],
+      ['vec2text', 'nlp', 'Embedding-inversion privacy demo', '2025', 2025, 'Embed a note snippet, invert it with vec2text, and watch which identifying details fall out.', 0, [0, .1, 0, 1, .1, .7, .6, 0, 0]],
+      ['rfi', 'nlp', 'Multi-agent RFI responder', '2026', 2026, 'Agents that draft answers to data requests from the reference document.', 0, [0, 0, 0, .9, .5, .8, 0, .2, 0]],
+      ['slackbot', 'nlp', 'Program assistant in Slack', '2025 – 2026', 2025, 'Started as a prompt-optimizer slash command; grew into an assistant that answers program questions from the same sources the humans use.', 0, [0, 0, 0, .8, .5, .8, 0, 0, 0]],
+      ['media', 'nlp', 'Media-monitoring agent', '2026', 2026, 'Watches trial registries and FDA feeds for things the program should know about.', 0, [0, .1, 0, .8, .4, .8, .2, 0, 0]],
+      ['deid', 'nlp', 'De-identification design', '2026', 2026, 'A design for de-identifying the whole note corpus.', 0, [0, .3, 0, .8, .5, .4, .2, 0, 0]],
+      ['agentkit', 'nlp', 'English to platform query', '2026', 2026, 'An agent workflow that turns pasted inclusion criteria into platform codes, with guardrails and a domain classifier.', 0, [0, .6, 0, .9, .2, .9, .1, 0, 0]],
+      ['amia26', 'nlp', 'AMIA 2026 live demonstration', '2026', 2026, 'The note-search copilot, live, in front of informaticians.', 0, [0, .2, 0, .9, .5, .3, .4, .4, 0]],
+      ['ispor26', 'nlp', 'ISPOR Europe 2026, Vienna', '2026', 2026, 'NLP-derived real-world data, booth demonstration.', 0, [0, .3, 0, .8, .6, .1, .3, .3, 0]],
+      ['webinar', 'teach', 'AMIA careers webinar', '2026', 2026, 'Co-presented an AMIA Informatics Partnership Council webinar on careers in the secondary use of clinical data, February 2026.', 0, [.1, .3, 0, .4, .3, 0, .2, 1, 0]],
+      ['mit', 'nlp', 'MIT Professional Education, Applied Agentic AI', '2025', 2025, 'Agents, tools, evaluation.', 1, [0, 0, 0, .9, .2, .6, .2, .3, 0]],
+      ['databricks', 'nlp', 'Databricks · Model Serving · Vector Search', '2024 –', 2024, 'Where the prototypes run.', 0, [0, .2, 0, .8, .1, 1, 0, 0, 0]],
+      ['es', 'nlp', 'Elasticsearch', '2022 –', 2022, 'The index under note search.', 0, [0, .3, 0, .7, 0, 1, 0, 0, 0]],
+      ['python', 'nlp', 'Python · FastAPI · PySpark · SQL', '2018 –', 2018, 'The daily tools.', 0, [0, .3, 0, .5, 0, 1, 0, 0, 0]],
+      ['localllm', 'build', 'Local models: Ollama, litellm, LangGraph', '2024 –', 2024, 'Running open models at home and learning the agent frameworks before using them at work.', 0, [0, 0, 0, .8, 0, .9, .1, .2, 0]],
+      ['licelens', 'build', 'LiceLens', '2025 – 2026', 2025, 'iOS app that screens scalp and comb images for head lice with an on-device model. Submitted to App Review October 2026.', 1, [.3, 0, 0, .5, .3, 1, .3, .1, 0]],
+      ['licemodel', 'build', 'LiceLens dataset and Core ML model', '2025 – 2026', 2025, 'Built the dataset, trained and evaluated the model, shipped it on-device.', 0, [.2, .1, 0, .6, .1, 1, .4, 0, 0]],
+      ['patent', 'build', 'Provisional patent, LiceLens', '2025', 2025, 'Filed on the scalp-scan method.', 0, [.2, 0, 0, .4, .6, .4, .5, 0, 0]],
+      ['tutorial', 'build', 'Narrated app tutorial', '2026', 2026, 'A voiced walkthrough over real app screens.', 0, [0, 0, 0, .3, .2, .8, 0, .6, 0]],
+      ['scales', 'build', 'Clinical scale extraction agents', '2025', 2025, 'Multi-agent pipeline that extracts, validates, and ranks PHQ-9 and ECOG scores from narrative.', 0, [.2, .2, 0, 1, .1, .8, .2, 0, 0]],
+      ['pawtriarchy', 'build', 'The Pawtriarchy, a family hub', '2025 –', 2025, 'A password-protected family site with recipes, a shared calendar, and three generations of memoirs. Flask and Postgres on Render.', 0, [0, 0, 0, 0, .1, 1, 0, .5, 0]],
+      ['compmastery', 'build', 'Competitive Mastery', '2026 –', 2026, 'Athlete-development engine with persona-driven coaching avatars and voice simulation. Proof of concept in progress.', 0, [0, 0, 0, .7, .6, .7, 0, .3, .6]],
+      ['swift', 'build', 'Swift · SwiftUI · Core ML · PyTorch', '2025 –', 2025, 'The weekend stack.', 0, [0, 0, 0, .5, 0, 1, 0, 0, 0]],
+      ['mcphsfac', 'teach', 'Associate faculty, MCPHS', '2001 – 2003', 2001, 'Teaching pharmacy students aseptic technique and compounding while practicing.', 0, [.7, 0, 0, 0, .1, 0, .1, 1, 0]],
+      ['neu', 'teach', 'Adjunct Assistant Clinical Professor, Northeastern', '2008 – 2013', 2008, 'Precepting pharmacy students at BMC, Partners, and Tufts; rotations coordinator for residents.', 0, [.6, .2, .2, 0, .1, 0, .1, 1, 0]],
+      ['coderx', 'teach', 'CodeRx community', '2023 –', 2023, 'Active in the community of pharmacists who code.', 0, [.3, .1, 0, .2, 0, .5, 0, .5, 0]],
+      ['mfa', 'teach', 'MFA, Creative Nonfiction, Lesley University', '2019', 2017, 'Two years of learning to write. It is why the spec, the methods paper, and the launch brief get read.', 1, [0, 0, 0, 0, 0, 0, .4, 1, 0]],
+      ['bc', 'teach', 'Leadership for Change, Boston College', '', 2016, 'A year in the Boston College leadership program.', 0, [0, 0, 0, 0, .9, 0, 0, .5, 0]],
+      ['dosechanges', 'res', 'Dose changes of oral antineoplastics in claims', '', 2022, 'Detecting dose changes of oral antineoplastic medications using an open claims dataset.', 0, [.5, .4, 0, .3, 0, .2, .9, 0, 0]]
+    ];
+    var EDGES = [
+      ['pharmd', 'mgh'], ['pharmd', 'mcphsfac'], ['mgh', 'pnqc'], ['mgh', 'alpaper'], ['pnqc', 'alpaper'], ['mgh', 'nutrition'],
+      ['nutrition', 'bmcqm'], ['bmcqm', 'usp797'], ['bmcqm', 'medsafety'], ['medsafety', 'pke'], ['bmcqm', 'emcase'],
+      ['pke', 'ddi'], ['ddi', 'jamia'], ['pke', 'grantmed'], ['pke', 'grantpgx'], ['pke', 'adherence'], ['pke', 'bwhsafety'], ['pke', 'neu'],
+      ['pke', 'sba'], ['sba', 'lmr'], ['sba', 'mu'], ['lmr', 'adherence'],
+      ['sba', 'coach'], ['coach', 'crossfit'], ['coach', 'cfne'], ['coach', 'clinics'], ['coach', 'reebok'], ['coach', 'wellness'], ['coach', 'tufts'], ['wellness', 'compmastery'],
+      ['crossfit', 'cfoly'], ['crossfit', 'cfl1'], ['cfl1', 'coach'], ['cfoly', 'clinics'], ['usaw1', 'clinics'], ['usaw1', 'usaw2'], ['risto', 'clinics'], ['attitude', 'clinics'], ['coach', 'cfpower'], ['coach', 'cfmobility'], ['coach', 'cfstrongman'], ['box', 'coach'], ['box', 'cfne'],
+      ['boston2005', 'bmcqm'], ['boston2010', 'runforstroke'], ['boston2010', 'falmouth2011'], ['crossfit', 'boston2010'],
+      ['tufts', 'cerner'], ['tufts', 'tpnsw'], ['tpnsw', 'pnqc'], ['tufts', 'consult'],
+      ['consult', 'rxnorm'], ['consult', 'telepharm'], ['consult', 'atc'], ['consult', 'bc'], ['consult', 'cis'],
+      ['cis', 'harmon'], ['harmon', 'rxnorm'], ['cis', 'sdoh'], ['cis', 'python'], ['cis', 'mfa'],
+      ['cis', 'dirinfo'], ['dirinfo', 'vendorllm'], ['dirinfo', 'notesearch1'], ['dirinfo', 'chartabs'], ['dirinfo', 'strategy'], ['dirinfo', 'cts2023'], ['dirinfo', 'icpe2023'], ['dirinfo', 'dosechanges'], ['dirinfo', 'coderx'],
+      ['notesearch1', 'es'], ['notesearch1', 'multimodal'],
+      ['dirinfo', 'cnplead'], ['strategy', 'cnplead'], ['cnplead', 'vendorneg'], ['cnplead', 'strategicmeds'], ['cnplead', 'amia24poster'], ['cnplead', 'amia24panel'],
+      ['cnplead', 'multimodal'], ['multimodal', 'lucene'], ['multimodal', 'presidio'], ['multimodal', 'amia25poster'], ['multimodal', 'es'], ['scales', 'lucene'], ['scales', 'es'],
+      ['cnplead', 'cnpagree'], ['cnpagree', 'pilotlaunch'], ['cnplead', 'governance'], ['cnplead', 'okr'],
+      ['cnplead', 'oncopipe'], ['cnplead', 'perfpipe'], ['cnplead', 'cardiopipe'], ['oncopipe', 'accuracy'], ['perfpipe', 'accuracy'], ['cardiopipe', 'accuracy'], ['accuracy', 'gapaudit'], ['accuracy', 'explorer'],
+      ['strategicmeds', 'epicrx'], ['strategicmeds', 'jbi2025'], ['harmon', 'jbi2025'], ['rxnorm', 'jbi2025'], ['epicrx', 'n8n'],
+      ['n8n', 'agentkit'], ['n8n', 'slackbot'], ['localllm', 'n8n'], ['mit', 'agentkit'], ['mit', 'rfi'], ['mit', 'copilot'],
+      ['copilot', 'amia26'], ['copilot', 'es'], ['copilot', 'databricks'], ['copilot', 'ispor26'], ['assertion', 'negation'], ['assertion', 'databricks'], ['negation', 'perfpipe'],
+      ['vec2text', 'deid'], ['presidio', 'deid'], ['deid', 'governance'], ['media', 'slackbot'], ['rfi', 'governance'],
+      ['cnplead', 'webinar'], ['cnplead', 'amia26'], ['cnplead', 'ispor26'],
+      ['licelens', 'licemodel'], ['licelens', 'patent'], ['licelens', 'tutorial'], ['licelens', 'swift'], ['licemodel', 'swift'], ['mfa', 'tutorial'],
+      ['pawtriarchy', 'python'], ['pawtriarchy', 'mfa'], ['compmastery', 'mit'], ['coderx', 'python']
+    ];
+    var ITEMS = RAW.map(function (r) { return { id: r[0], cat: r[1], label: r[2], years: r[3], start: r[4], detail: r[5], anchor: r[6], v: r[7], url: r[8] || '' }; });
+    var IDX = {}; ITEMS.forEach(function (it, i) { IDX[it.id] = i; });
+    var LINKS = EDGES.map(function (e) { return [IDX[e[0]], IDX[e[1]]]; }).filter(function (e) { return e[0] !== undefined && e[1] !== undefined; });
+    var ADJ = ITEMS.map(function () { return []; }); LINKS.forEach(function (e) { ADJ[e[0]].push(e[1]); ADJ[e[1]].push(e[0]); });
+
+    var canvas = document.getElementById('space-canvas');
+    if (!canvas || !canvas.getContext) return;
+    var ctx = canvas.getContext('2d');
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var N = ITEMS.length, D = DIMS.length, i, j, k, a;
+
+    // ---- PCA (power iteration with deflation) ----
+    var X = ITEMS.map(function (it) { return it.v.slice(); });
+    var mean = [];
+    for (j = 0; j < D; j++) { var s = 0; for (i = 0; i < N; i++) s += X[i][j]; mean[j] = s / N; }
+    for (i = 0; i < N; i++) for (j = 0; j < D; j++) X[i][j] -= mean[j];
+    var C = []; for (j = 0; j < D; j++) { C[j] = []; for (k = 0; k < D; k++) { var c = 0; for (i = 0; i < N; i++) c += X[i][j] * X[i][k]; C[j][k] = c / N; } }
+    var total = 0; for (j = 0; j < D; j++) total += C[j][j];
+    function powerIter(M) {
+      var v = [], n; for (j = 0; j < D; j++) v[j] = 0.3 + 0.1 * j;
+      for (var it = 0; it < 200; it++) {
+        var w = []; for (j = 0; j < D; j++) { w[j] = 0; for (k = 0; k < D; k++) w[j] += M[j][k] * v[k]; }
+        n = Math.sqrt(w.reduce(function (p, q) { return p + q * q; }, 0)) || 1;
+        v = w.map(function (x) { return x / n; });
+      }
+      var lam = 0; for (j = 0; j < D; j++) { var r = 0; for (k = 0; k < D; k++) r += M[j][k] * v[k]; lam += v[j] * r; }
+      return { v: v, lam: lam };
+    }
+    var comps = [], M = C.map(function (r) { return r.slice(); });
+    for (a = 0; a < 3; a++) { var e = powerIter(M); comps.push(e); for (j = 0; j < D; j++) for (k = 0; k < D; k++) M[j][k] -= e.lam * e.v[j] * e.v[k]; }
+    var PCA = X.map(function (x, idx) {
+      var p = comps.map(function (cc) { var t = 0; for (j = 0; j < D; j++) t += x[j] * cc.v[j]; return t; });
+      var h = (idx * 9301 + 49297) % 233280 / 233280;
+      return [p[0] + (h - .5) * .06, p[1] + ((h * 7) % 1 - .5) * .06, p[2] + ((h * 13) % 1 - .5) * .06];
+    });
+    var mx = [0, 0, 0]; PCA.forEach(function (p) { for (a = 0; a < 3; a++) mx[a] = Math.max(mx[a], Math.abs(p[a])); });
+    PCA = PCA.map(function (p) { return [p[0] / mx[0], p[1] / mx[1], p[2] / mx[2]]; });
+    var Y0 = 2000, Y1 = 2026;
+    var TL = PCA.map(function (p, idx) { var y = Math.max(Y0, Math.min(Y1, ITEMS[idx].start)); return [((y - Y0) / (Y1 - Y0)) * 2 - 1, p[0] * 0.9, p[1] * 0.9]; });
+    var explained = comps.reduce(function (t, cc) { return t + cc.lam; }, 0) / total;
+    document.getElementById('space-count').textContent = N + ' points · ' + LINKS.length + ' links';
+    document.getElementById('space-var').textContent = 'variance kept ' + Math.round(explained * 100) + '%';
+
+    function cos(u, w) { var d = 0, nu = 0, nw = 0; for (j = 0; j < D; j++) { d += u[j] * w[j]; nu += u[j] * u[j]; nw += w[j] * w[j]; } return d / (Math.sqrt(nu * nw) || 1); }
+    function neighbors(idx, n) {
+      var out = []; for (i = 0; i < N; i++) if (i !== idx) out.push([i, cos(ITEMS[idx].v, ITEMS[i].v)]);
+      out.sort(function (p, q) { return q[1] - p[1]; }); return out.slice(0, n);
+    }
+
+    // ---- state ----
+    var yaw = -0.6, pitch = 0.35, zoom = 1, vyaw = 0, vpitch = 0, dragging = false, lastX = 0, lastY = 0, idleT = 0;
+    var hover = -1, selected = -1, query = '', on = {}, visible = true, year = Y1, showLinks = true, layout = 'pca', mix = 0, mixTarget = 0;
+    var tour = null, playing = null, pair = null, pairText = '', compareFrom = -1, ticking = false, wantWake = false;
+    var BRIDGES = [
+      ['coach', 'copilot', 'Coaching and NLP are the same job. A snatch clinic and a model spec both break something complex into cues another person can execute, then watch where they fail and fix the cue.'],
+      ['nutrition', 'harmon', 'Bedside and terminology. Writing parenteral nutrition orders taught me what a dose looks like in the wild. Mapping medication strings to RxNorm is the same string, fifteen years later.'],
+      ['mfa', 'pilotlaunch', 'Writing and product. The MFA is the reason the launch brief got read. Pricing went through sign-off on a document, not in a meeting.'],
+      ['runforstroke', 'licelens', 'First thing shipped, latest thing shipped. A fundraising site with videos in 2010; an App Store submission in 2026. Same instinct: build it yourself and put it in front of people.'],
+      ['medsafety', 'accuracy', 'Medication safety and NLP accuracy are one discipline. Tracking medication errors at BMC and tracking pipeline precision both come down to measure, reconcile, fix.'],
+      ['ddi', 'negation', 'Decision support and assertion. A drug-interaction alert is a rule about context. So is deciding that "denies chest pain" is not chest pain.'],
+      ['box', 'cnpagree', 'Running a gym and running a program. The BOX seminar was about an affiliate as a business. The program agreements were the same lesson, with lawyers.'],
+      ['neu', 'webinar', 'Teaching, throughout. Precepting pharmacy students in 2008; telling early-career informaticians what the job actually is in 2026.']
+    ].map(function (b) { return [IDX[b[0]], IDX[b[1]], b[2]]; }).filter(function (b) { return b[0] !== undefined && b[1] !== undefined; });
+    function shortestPath(a0, b0) {
+      if (a0 === b0) return [a0];
+      var prev = {}, q = [a0]; prev[a0] = -1;
+      while (q.length) {
+        var u = q.shift();
+        for (var t = 0; t < ADJ[u].length; t++) { var w = ADJ[u][t]; if (prev[w] !== undefined) continue; prev[w] = u; if (w === b0) { var path = [w]; while (prev[path[0]] !== -1) path.unshift(prev[path[0]]); return path; } q.push(w); }
+      }
+      return null;
+    }
+    var pathNodes = [], pathEdges = {};
+    function setPair(a0, b0, text) {
+      pair = [a0, b0]; pairText = text || ''; selected = -1; nnCache = null; compareFrom = -1; stopTour();
+      var path = shortestPath(a0, b0) || [a0, b0]; pathNodes = path; pathEdges = {};
+      for (var t = 0; t + 1 < path.length; t++) { pathEdges[path[t] + '-' + path[t + 1]] = 1; pathEdges[path[t + 1] + '-' + path[t]] = 1; }
+      if (!inYear(a0) || !inYear(b0)) setYear(Y1);
+      renderDetail(); wake();
+    }
+    Object.keys(CATS).forEach(function (cc) { on[cc] = true; });
+    var colors = {}, fg, faint, rule, panelBg, accent;
+    function readTheme() {
+      var cs = getComputedStyle(document.documentElement);
+      Object.keys(CATS).forEach(function (cc) { colors[cc] = cs.getPropertyValue(CATS[cc].v).trim(); });
+      fg = cs.getPropertyValue('--fg').trim(); faint = cs.getPropertyValue('--faint').trim(); rule = cs.getPropertyValue('--rule').trim(); panelBg = cs.getPropertyValue('--panel').trim(); accent = cs.getPropertyValue('--accent').trim();
+      buildLegend();
+    }
+    function inYear(idx) { return ITEMS[idx].start <= year; }
+    function matches(idx) {
+      var it = ITEMS[idx];
+      if (!on[it.cat] || !inYear(idx)) return false;
+      if (!query) return true;
+      return (it.label + ' ' + it.years + ' ' + it.detail + ' ' + CATS[it.cat].name).toLowerCase().indexOf(query) >= 0;
+    }
+
+    // ---- sizing ----
+    var W = 0, H = 0, dpr = 1;
+    function resize() {
+      var r = canvas.getBoundingClientRect(); dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = r.width; H = r.height; canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); draw();
+    }
+
+    // ---- projection ----
+    var proj = [];
+    function cam() { return { cy: Math.cos(yaw), sy: Math.sin(yaw), cp: Math.cos(pitch), sp: Math.sin(pitch), R: Math.min(W, H) * 0.36 * zoom, f: 3.2 }; }
+    function to2d(p, c) {
+      var x = p[0] * c.cy - p[2] * c.sy, z = p[0] * c.sy + p[2] * c.cy, y = p[1] * c.cp - z * c.sp; z = p[1] * c.sp + z * c.cp;
+      var s = c.f / (c.f + z);
+      return { x: W / 2 + x * c.R * s, y: H / 2 + y * c.R * s, z: z, s: s };
+    }
+    function pos3(idx) { var p = PCA[idx], t = TL[idx]; return [p[0] + (t[0] - p[0]) * mix, p[1] + (t[1] - p[1]) * mix, p[2] + (t[2] - p[2]) * mix]; }
+    function project() { var c = cam(); proj = ITEMS.map(function (_, idx) { var q = to2d(pos3(idx), c); q.i = idx; return q; }); }
+    function cube() {
+      var c = cam(), pts = [];
+      for (var q = 0; q < 8; q++) pts.push(to2d([(q & 1 ? 1 : -1), (q & 2 ? 1 : -1), (q & 4 ? 1 : -1)], c));
+      ctx.strokeStyle = rule; ctx.lineWidth = 1; ctx.globalAlpha = 1; ctx.beginPath();
+      [[0, 1], [1, 3], [3, 2], [2, 0], [4, 5], [5, 7], [7, 6], [6, 4], [0, 4], [1, 5], [2, 6], [3, 7]].forEach(function (ed) { ctx.moveTo(pts[ed[0]].x, pts[ed[0]].y); ctx.lineTo(pts[ed[1]].x, pts[ed[1]].y); });
+      ctx.stroke();
+      if (mix > 0.5) {
+        ctx.fillStyle = fg; ctx.globalAlpha = (mix - 0.5) * 1.2; ctx.font = '500 10px ' + mono; ctx.textBaseline = 'top';
+        [Y0, 2010, 2020, Y1].forEach(function (yy) { var q = to2d([((yy - Y0) / (Y1 - Y0)) * 2 - 1, 1.08, -1], c); ctx.fillText(String(yy), q.x - 12, q.y); });
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    // ---- draw ----
+    var nnCache = null, mono = getComputedStyle(canvas).getPropertyValue('--mono') || 'monospace';
+    function isLit(idx) { return idx === selected || idx === hover; }
+    function draw() {
+      if (!W) return;
+      project();
+      ctx.clearRect(0, 0, W, H);
+      cube();
+      var anyFilter = query || Object.keys(on).some(function (cc) { return !on[cc]; });
+      var selAdj = selected >= 0 ? ADJ[selected] : [];
+      var onPath = {}; if (pair) pathNodes.forEach(function (x) { onPath[x] = 1; });
+      // links
+      if (showLinks) {
+        LINKS.forEach(function (ed) {
+          var p = proj[ed[0]], q = proj[ed[1]];
+          if (!matches(ed[0]) || !matches(ed[1])) return;
+          var touches = selected >= 0 && (ed[0] === selected || ed[1] === selected);
+          var onP = pair && pathEdges[ed[0] + '-' + ed[1]];
+          var depth = ((p.z + q.z) / 2 + 1.2) / 2.4;
+          ctx.strokeStyle = onP ? accent : touches ? colors[ITEMS[selected].cat] : fg;
+          ctx.globalAlpha = onP ? 0.95 : touches ? 0.75 : (selected >= 0 || pair ? 0.05 : 0.13 - depth * 0.07);
+          ctx.lineWidth = onP ? 2.2 : touches ? 1.5 : 1;
+          ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke();
+        });
+      }
+      // bridge: direct line between the pair when there is no link path
+      if (pair && pathNodes.length === 2 && !pathEdges[pair[0] + '-' + pair[1]]) {
+        var pa = proj[pair[0]], pb = proj[pair[1]]; ctx.setLineDash([4, 5]); ctx.strokeStyle = accent; ctx.globalAlpha = 0.9; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(pa.x, pa.y); ctx.lineTo(pb.x, pb.y); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+      }
+      // nearest-neighbor lines (dashed)
+      if (selected >= 0 && nnCache) {
+        var a0 = proj[selected]; ctx.setLineDash([3, 4]);
+        nnCache.forEach(function (nn) { if (!matches(nn[0])) return; var b = proj[nn[0]]; ctx.strokeStyle = colors[ITEMS[selected].cat]; ctx.globalAlpha = 0.2 + nn[1] * 0.35; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(a0.x, a0.y); ctx.lineTo(b.x, b.y); ctx.stroke(); });
+        ctx.setLineDash([]); ctx.globalAlpha = 1;
+      }
+      ctx.font = '500 11px ' + mono; ctx.textBaseline = 'middle';
+      var order = proj.slice().sort(function (p, q) { return p.z - q.z; });
+      order.forEach(function (p) {
+        var it = ITEMS[p.i], col = colors[it.cat], m = matches(p.i);
+        if (!inYear(p.i)) return;
+        if (pair && (p.i === pair[0] || p.i === pair[1])) col = accent;
+        var isEnd = pair && (p.i === pair[0] || p.i === pair[1]), isPath = pair && onPath[p.i] && !isEnd;
+        var isSel = p.i === selected || isEnd, isHov = p.i === hover, isNN = nnCache && nnCache.some(function (nn) { return nn[0] === p.i; }), isAdj = selAdj.indexOf(p.i) >= 0 || isPath;
+        var depth = (p.z + 1.2) / 2.4;
+        var alpha = m ? (0.95 - depth * 0.5) : 0.08;
+        if ((selected >= 0 || pair) && m && !isSel && !isNN && !isAdj) alpha *= (pair ? 0.3 : 0.55);
+        var r = (it.anchor ? 5.2 : 3.6) * p.s * (isSel ? 1.6 : isHov ? 1.35 : 1);
+        if (isEnd) col = accent;
+        ctx.globalAlpha = alpha; ctx.fillStyle = col;
+        ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.fill();
+        if (isSel || isHov) { ctx.globalAlpha = 0.35; ctx.beginPath(); ctx.arc(p.x, p.y, r + 6, 0, Math.PI * 2); ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.stroke(); }
+        var label = isSel || isHov || isNN || isAdj || (it.anchor && m && !anyFilter && selected < 0 && !pair && p.s > 0.95) || (anyFilter && m && query);
+        if (label) {
+          var lit = isSel || isHov;
+          var t = it.label.length > 44 && !lit ? it.label.slice(0, 42) + '…' : it.label;
+          var tw = ctx.measureText(t).width, lx = p.x + r + 7, ly = p.y;
+          if (lx + tw > W - 8) lx = p.x - r - 7 - tw;
+          ctx.globalAlpha = lit ? 0.95 : Math.max(0.3, 0.8 - depth * 0.6); ctx.fillStyle = panelBg; ctx.fillRect(lx - 3, ly - 8, tw + 6, 16);
+          ctx.globalAlpha = lit ? 1 : Math.max(0.5, 0.9 - depth * 0.6); ctx.fillStyle = lit ? fg : faint; ctx.fillText(t, lx, ly);
+        }
+      });
+      ctx.globalAlpha = 1;
+    }
+
+    // ---- animation ----
+    var raf = null, lastT = 0;
+    function tick(t) {
+      raf = null; ticking = true; wantWake = false;
+      var dt = Math.min(40, t - lastT || 16); lastT = t;
+      var busy = false;
+      if (!dragging) {
+        yaw += vyaw; pitch += vpitch; vyaw *= 0.93; vpitch *= 0.93;
+        idleT += dt;
+        if (!reduce && idleT > 2500 && selected < 0 && !pair && hover < 0 && !query && !tour && !playing) yaw += 0.00018 * dt;
+        pitch = Math.max(-1.3, Math.min(1.3, pitch));
+      }
+      if (Math.abs(mixTarget - mix) > 0.001) { mix += (mixTarget - mix) * (reduce ? 1 : 0.12); busy = true; } else mix = mixTarget;
+      if (playing) { playing.acc += dt; if (playing.acc > 650) { playing.acc = 0; setYear(year + 1); if (year >= Y1) stopPlay(); } busy = true; }
+      if (tour) { tour.acc += dt; if (tour.acc > 3600) { tour.acc = 0; tourStep(); } busy = true; }
+      draw();
+      ticking = false;
+      if (visible && (busy || wantWake || !reduce || dragging || Math.abs(vyaw) + Math.abs(vpitch) > 0.0002)) raf = requestAnimationFrame(tick);
+    }
+    function wake() { if (ticking) { wantWake = true; return; } if (!raf) raf = requestAnimationFrame(tick); }
+
+    // ---- interaction ----
+    function pick(mx, my) {
+      var best = -1, bd = 14 * 14;
+      proj.forEach(function (p) { if (!matches(p.i)) return; var dx = p.x - mx, dy = p.y - my, d = dx * dx + dy * dy; if (d < bd) { bd = d; best = p.i; } });
+      return best;
+    }
+    function pos(e) { var r = canvas.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+    var moved = 0, pointers = {}, pinch0 = 0, zoom0 = 1;
+    canvas.addEventListener('pointerdown', function (e) {
+      pointers[e.pointerId] = pos(e); canvas.setPointerCapture(e.pointerId); stopTour();
+      var ks = Object.keys(pointers);
+      if (ks.length === 2) { var p1 = pointers[ks[0]], p2 = pointers[ks[1]]; pinch0 = Math.hypot(p1[0] - p2[0], p1[1] - p2[1]); zoom0 = zoom; dragging = false; return; }
+      dragging = true; moved = 0; var p = pos(e); lastX = p[0]; lastY = p[1]; vyaw = vpitch = 0; canvas.classList.add('drag'); wake();
+    });
+    canvas.addEventListener('pointermove', function (e) {
+      var p = pos(e); idleT = 0;
+      if (pointers[e.pointerId]) pointers[e.pointerId] = p;
+      var ks = Object.keys(pointers);
+      if (ks.length === 2) { var p1 = pointers[ks[0]], p2 = pointers[ks[1]]; var d = Math.hypot(p1[0] - p2[0], p1[1] - p2[1]); zoom = Math.max(0.5, Math.min(3, zoom0 * d / (pinch0 || d))); wake(); return; }
+      if (dragging) {
+        var dx = p[0] - lastX, dy = p[1] - lastY; moved += Math.abs(dx) + Math.abs(dy);
+        vyaw = dx * 0.005; vpitch = dy * 0.005; yaw += vyaw; pitch = Math.max(-1.3, Math.min(1.3, pitch + vpitch)); lastX = p[0]; lastY = p[1]; wake();
+      } else if (e.pointerType !== 'touch') {
+        var h = pick(p[0], p[1]); if (h !== hover) { hover = h; canvas.classList.toggle('pt', h >= 0); wake(); }
+      }
+    });
+    function up(e) {
+      delete pointers[e.pointerId];
+      if (dragging && moved < 6 && e.type === 'pointerup') { var p = pos(e), hit = pick(p[0], p[1]); if (compareFrom >= 0 && hit >= 0 && hit !== compareFrom) setPair(compareFrom, hit, ''); else select(hit); }
+      dragging = false; canvas.classList.remove('drag'); wake();
+    }
+    canvas.addEventListener('pointerup', up); canvas.addEventListener('pointercancel', up);
+    canvas.addEventListener('pointerleave', function () { if (hover >= 0) { hover = -1; canvas.classList.remove('pt'); wake(); } });
+    canvas.addEventListener('wheel', function (e) {
+      if (!(e.ctrlKey || e.metaKey)) return; e.preventDefault();
+      zoom = Math.max(0.5, Math.min(3, zoom * (e.deltaY < 0 ? 1.08 : 0.93))); idleT = 0; wake();
+    }, { passive: false });
+    document.querySelectorAll('.space .ctl button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var z = b.getAttribute('data-z');
+        if (z === 'in') zoom = Math.min(3, zoom * 1.2); else if (z === 'out') zoom = Math.max(0.5, zoom / 1.2); else { zoom = 1; yaw = -0.6; pitch = 0.35; select(-1); setYear(Y1); stopTour(); }
+        idleT = 0; wake();
+      });
+    });
+    var spaceEl = canvas.closest('.space'), fsBtn = document.getElementById('space-fs');
+    function isFs() { return document.fullscreenElement === spaceEl || spaceEl.classList.contains('fs'); }
+    function toggleFs() {
+      if (isFs()) { if (document.fullscreenElement) document.exitFullscreen(); else spaceEl.classList.remove('fs'); }
+      else if (spaceEl.requestFullscreen) spaceEl.requestFullscreen().catch(function () { spaceEl.classList.add('fs'); });
+      else spaceEl.classList.add('fs');
+      setTimeout(resize, 50); setTimeout(resize, 400);
+    }
+    fsBtn.addEventListener('click', toggleFs);
+    document.addEventListener('fullscreenchange', function () { fsBtn.textContent = isFs() ? '⤡' : '⤢'; fsBtn.setAttribute('aria-label', isFs() ? 'Exit full screen' : 'Full screen'); resize(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && spaceEl.classList.contains('fs')) { spaceEl.classList.remove('fs'); fsBtn.textContent = '⤢'; resize(); } });
+    canvas.tabIndex = 0;
+    canvas.addEventListener('keydown', function (e) {
+      var step = 0.08;
+      if (e.key === 'ArrowLeft') yaw -= step; else if (e.key === 'ArrowRight') yaw += step; else if (e.key === 'ArrowUp') pitch -= step; else if (e.key === 'ArrowDown') pitch += step;
+      else if (e.key === 'Escape') { select(-1); stopTour(); } else if (e.key === 'f' || e.key === 'F') { toggleFs(); } else return;
+      e.preventDefault(); idleT = 0; wake();
+    });
+
+    // ---- year scrubber, layout, links, tour ----
+    var yearEl = document.getElementById('space-year'), yearLab = document.getElementById('space-year-label'), playBtn = document.getElementById('space-play');
+    var layoutBtns = document.querySelectorAll('[data-layout]'), linksBtn = document.getElementById('space-links'), tourBtn = document.getElementById('space-tour');
+    function setYear(y) {
+      year = Math.max(Y0, Math.min(Y1, Math.round(y)));
+      yearEl.value = year; yearLab.textContent = year >= Y1 ? 'through now' : 'through ' + year;
+      if (selected >= 0 && !inYear(selected)) select(-1);
+      wake();
+    }
+    yearEl.addEventListener('input', function () { stopPlay(); stopTour(); setYear(parseInt(yearEl.value, 10)); idleT = 0; });
+    function stopPlay() { playing = null; playBtn.textContent = '▶'; playBtn.setAttribute('aria-label', 'Play the years'); }
+    playBtn.addEventListener('click', function () {
+      if (playing) { stopPlay(); return; }
+      stopTour(); if (year >= Y1) setYear(Y0); playing = { acc: 0 }; playBtn.textContent = '❚❚'; playBtn.setAttribute('aria-label', 'Pause'); idleT = 0; wake();
+    });
+    layoutBtns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        layout = b.getAttribute('data-layout'); mixTarget = layout === 'time' ? 1 : 0;
+        layoutBtns.forEach(function (x) { x.setAttribute('aria-pressed', x === b); });
+        if (layout === 'time') { yaw = -0.15; pitch = 0.25; }
+        idleT = 0; wake();
+      });
+    });
+    linksBtn.addEventListener('click', function () { showLinks = !showLinks; linksBtn.setAttribute('aria-pressed', showLinks); wake(); });
+    var TOUR = ITEMS.map(function (it, idx) { return it.anchor ? idx : -1; }).filter(function (x) { return x >= 0; }).sort(function (p, q) { return ITEMS[p].start - ITEMS[q].start; });
+    function tourStep() {
+      tour.n = (tour.n + 1) % TOUR.length; var idx = TOUR[tour.n];
+      setYear(ITEMS[idx].start); selectQuiet(idx);
+      if (tour.n === TOUR.length - 1) setYear(Y1);
+    }
+    function stopTour() { if (!tour) return; tour = null; tourBtn.setAttribute('aria-pressed', 'false'); tourBtn.textContent = 'Tour'; }
+    tourBtn.addEventListener('click', function () {
+      if (tour) { stopTour(); wake(); return; }
+      stopPlay(); tour = { n: -1, acc: 0 }; tourBtn.setAttribute('aria-pressed', 'true'); tourBtn.textContent = 'Stop'; tourStep(); wake();
+    });
+
+    // ---- panel ----
+    var legend = document.getElementById('space-legend'), detail = document.getElementById('space-detail'), search = document.getElementById('space-search');
+    function buildLegend() {
+      legend.innerHTML = '';
+      Object.keys(CATS).forEach(function (cc) {
+        var b = document.createElement('button'); b.type = 'button'; b.style.setProperty('--sw', colors[cc]);
+        b.className = on[cc] ? '' : 'off'; b.setAttribute('aria-pressed', on[cc]);
+        b.innerHTML = '<i></i>' + CATS[cc].name;
+        b.addEventListener('click', function () { on[cc] = !on[cc]; b.className = on[cc] ? '' : 'off'; b.setAttribute('aria-pressed', on[cc]); if (selected >= 0 && !matches(selected)) select(-1); idleT = 0; wake(); });
+        legend.appendChild(b);
+      });
+    }
+    function esc(s) { return String(s).replace(/[&<>"]/g, function (ch) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]; }); }
+    function row(idx, right) { var o = ITEMS[idx]; return '<li><button type="button" data-i="' + idx + '" style="--sw:' + colors[o.cat] + '"><i></i><span>' + esc(o.label) + (right ? '<span class="bar"><b style="width:' + Math.round(right * 100) + '%"></b></span>' : '') + '</span><span class="d">' + (right ? right.toFixed(2) : esc(o.years.split(' ')[0] || '')) + '</span></button></li>'; }
+    function dot(idx) { return '<i style="background:' + colors[ITEMS[idx].cat] + '"></i>'; }
+    function renderDetail() {
+      if (pair) {
+        var A = ITEMS[pair[0]], B = ITEMS[pair[1]], sim = cos(A.v, B.v);
+        var shared = DIMS.map(function (d, q) { return [d, Math.min(A.v[q], B.v[q])]; }).filter(function (x) { return x[1] >= 0.3; }).sort(function (x, y) { return y[1] - x[1]; }).map(function (x) { return x[0]; });
+        var dims = DIMS.map(function (d, q) { return '<span>' + esc(d) + '<b><i style="width:' + Math.round(A.v[q] * 100) + '%"></i><i style="width:' + Math.round(B.v[q] * 100) + '%"></i></b></span>'; }).join('');
+        var hops = pathNodes.length - 1;
+        var pathHtml = pathNodes.length > 2 ? '<ul class="nn"><li class="lab">link path · ' + hops + ' hops</li>' + pathNodes.map(function (x) { return row(x, 0); }).join('') + '</ul>' : (shortestPath(pair[0], pair[1]) ? '' : '<p class="stat">no link path between them; the dashed line is similarity only</p>');
+        detail.innerHTML = '<div class="pairv" style="--sw:' + colors[A.cat] + ';--sw2:' + colors[B.cat] + '"><p class="cat" style="font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);margin:0">Bridge</p>' +
+          '<div class="ends"><button type="button" data-i="' + pair[0] + '" style="--sw:' + colors[A.cat] + '"><i></i>' + esc(A.label) + '</button><button type="button" data-i="' + pair[1] + '" style="--sw:' + colors[B.cat] + '"><i></i>' + esc(B.label) + '</button></div>' +
+          (pairText ? '<p class="why">' + esc(pairText) + '</p>' : '') +
+          '<p class="stat">similarity <b>' + sim.toFixed(2) + '</b>' + (shared.length ? ' · shared: <b>' + esc(shared.join(', ')) + '</b>' : ' · nothing shared above 0.3, which is the point') + '</p>' +
+          '<div class="dims dims2">' + dims + '</div>' + pathHtml +
+          '<p><button type="button" class="mini" id="space-pair-close">← back</button></p></div>';
+        detail.querySelectorAll('button[data-i]').forEach(function (b) { b.addEventListener('click', function () { select(parseInt(b.getAttribute('data-i'), 10)); }); });
+        document.getElementById('space-pair-close').addEventListener('click', function () { pair = null; renderDetail(); wake(); });
+        return;
+      }
+      if (selected < 0) {
+        detail.innerHTML = '<div class="empty"><p><strong>Click any point</strong> to see what it is, what it is linked to, and what it sits closest to. Distance is cosine similarity on the nine hand-scored dimensions, not on the picture.</p>' +
+          '<p>Solid lines are links I drew by hand. Dashed lines are the nearest neighbors the math found. Drag the year to watch it fill in, or press Tour.</p>' +
+          '<ul class="bridges"><li class="lab">bridges · how the far corners connect</li>' + BRIDGES.map(function (b, q) { return '<li><button type="button" data-b="' + q + '"><span class="pair">' + dot(b[0]) + dot(b[1]) + '</span><span>' + esc(ITEMS[b[0]].label) + ' ↔ ' + esc(ITEMS[b[1]].label) + '</span></button></li>'; }).join('') + '</ul>' +
+          '<p>Or pick any point, press <em>compare</em>, and pick a second one.</p></div>';
+        detail.querySelectorAll('button[data-b]').forEach(function (b) { b.addEventListener('click', function () { var br = BRIDGES[parseInt(b.getAttribute('data-b'), 10)]; idleT = 0; setPair(br[0], br[1], br[2]); }); });
+        return;
+      }
+      var it = ITEMS[selected], col = colors[it.cat], nn = nnCache, adj = ADJ[selected].slice().sort(function (p, q) { return ITEMS[p].start - ITEMS[q].start; });
+      var dims = DIMS.map(function (d, q) { return '<span>' + esc(d) + '<b><i style="width:' + Math.round(it.v[q] * 100) + '%"></i></b></span>'; }).join('');
+      detail.innerHTML = '<div class="sel" style="--sw:' + col + '"><p class="cat">' + esc(CATS[it.cat].name) + '</p><h3>' + esc(it.label) + '</h3>' + (it.years ? '<p class="yrs">' + esc(it.years) + '</p>' : '') + (it.detail ? '<p>' + esc(it.detail) + '</p>' : '') + (it.url ? '<p><a href="' + esc(it.url) + '" target="_blank" rel="noopener">Watch ↗</a></p>' : '') +
+        '<div class="dims">' + dims + '</div>' +
+        (adj.length ? '<ul class="nn"><li class="lab">linked · ' + adj.length + '</li>' + adj.map(function (x) { return row(x, 0); }).join('') + '</ul>' : '') +
+        '<ul class="nn"><li class="lab">nearest neighbors · cosine</li>' + nn.map(function (n) { return row(n[0], n[1]); }).join('') + '</ul>' +
+        '<p><button type="button" class="mini" id="space-compare" aria-pressed="' + (compareFrom === selected) + '">' + (compareFrom === selected ? 'now click a second point' : 'compare with another point') + '</button></p></div>';
+      detail.querySelectorAll('button[data-i]').forEach(function (b) { b.addEventListener('click', function () { var idx = parseInt(b.getAttribute('data-i'), 10); stopTour(); if (!inYear(idx)) setYear(Y1); if (compareFrom >= 0 && idx !== compareFrom) setPair(compareFrom, idx, ''); else select(idx); }); });
+      var cmp = document.getElementById('space-compare');
+      cmp.addEventListener('click', function () { compareFrom = compareFrom === selected ? -1 : selected; cmp.setAttribute('aria-pressed', compareFrom >= 0); cmp.textContent = compareFrom >= 0 ? 'now click a second point' : 'compare with another point'; canvas.focus(); });
+    }
+    function selectQuiet(idx) { selected = idx; pair = null; compareFrom = -1; nnCache = idx >= 0 ? neighbors(idx, 6) : null; renderDetail(); wake(); }
+    function select(idx) { idleT = 0; selectQuiet(idx); }
+    search.addEventListener('input', function () { query = search.value.trim().toLowerCase(); idleT = 0; stopTour(); wake(); });
+
+    // ---- boot ----
+    readTheme(); renderDetail(); setYear(Y1); resize();
+    window.addEventListener('resize', resize);
+    if ('ResizeObserver' in window) new ResizeObserver(function () { var r = canvas.getBoundingClientRect(); if (Math.abs(r.width - W) > 1 || Math.abs(r.height - H) > 1) resize(); }).observe(canvas);
+    if (window.matchMedia) {
+      var mq = window.matchMedia('(prefers-color-scheme: dark)');
+      (mq.addEventListener ? mq.addEventListener('change', function () { readTheme(); wake(); }) : mq.addListener(function () { readTheme(); wake(); }));
+    }
+    new MutationObserver(function () { readTheme(); wake(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { es.forEach(function (en) { visible = en.isIntersecting; if (visible) wake(); }); }, { threshold: 0.1 }).observe(canvas);
+    } else wake();
+  })();
+</script>
+
+</body>
+</html>
