@@ -278,10 +278,10 @@
   <div class="wrap">
     <a class="brand" href="#top" aria-label="John Doole, top of page"><i></i>John Doole</a>
     <ul>
+      <li><a href="#space">Map</a></li>
       <li><a href="#now">Now</a></li>
       <li><a href="#path">Path</a></li>
       <li><a href="#building">Building</a></li>
-      <li><a href="#space">Map</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </div>
@@ -333,6 +333,32 @@
     <span class="lbl">Worked, taught, or studied at</span>
     <span>TriNetX</span><span>Mass General Brigham</span><span>Boston Medical Center</span><span>Tufts Medical Center</span><span>MCPHS</span><span>Boston College</span><span>MIT</span>
   </div>
+
+  <section id="space">
+    <div class="sec-head">
+      <div><p class="eyebrow">Map · 2000 to now</p><h2>Twenty-six years, projected</h2></div>
+      <p>Every job, project, paper, talk, tool, and sport, scored by hand on nine dimensions and reduced to three with principal component analysis, in your browser. Things that are close here are close in kind: the pharmacy years sit on one side, the language models on the other, and terminology work runs between them. Drag to rotate. Click a point for what it links to and what it sits nearest. Scrub the year to watch it fill in, or press Tour.</p>
+    </div>
+    <div class="space">
+      <div class="stage">
+        <canvas id="space-canvas" aria-label="Interactive 3-D map of John Doole's career, roles and projects as points in an embedding space"></canvas>
+        <div class="hud"><p class="eyebrow">PCA · 9 → 3 · <b id="space-count"></b></p><p class="eyebrow" id="space-var"></p></div>
+        <div class="ctl" aria-label="Map controls"><button type="button" data-z="in" aria-label="Zoom in">+</button><button type="button" data-z="out" aria-label="Zoom out">−</button><button type="button" data-z="reset" aria-label="Reset view">⟲</button><button type="button" id="space-fs" aria-label="Full screen" title="Full screen">⤢</button></div>
+        <p class="hint">drag · rotate &nbsp; ⌘ + scroll · zoom &nbsp; click · inspect</p>
+        <div class="bar-ctl">
+          <div class="yr"><button type="button" class="play" id="space-play" aria-label="Play the years">▶</button><input type="range" id="space-year" min="2000" max="2026" step="1" value="2026" aria-label="Show items through this year"><span class="ylab" id="space-year-label">through now</span></div>
+          <span class="seg" role="group" aria-label="Layout"><button type="button" data-layout="pca" aria-pressed="true">Similarity</button><button type="button" data-layout="time" aria-pressed="false">Timeline</button></span>
+          <button type="button" id="space-links" aria-pressed="true">Links</button>
+          <button type="button" id="space-tour" aria-pressed="false">Tour</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="legend" id="space-legend" aria-label="Filter by kind"></div>
+        <input type="search" id="space-search" placeholder="search the map: rxnorm, llm, amia, crossfit…" aria-label="Search the map" autocomplete="off">
+        <div id="space-detail"></div>
+      </div>
+    </div>
+  </section>
 
   <section id="now">
     <div class="sec-head">
@@ -444,38 +470,13 @@
       <article class="proj">
         <p class="eyebrow">Web · 2026</p>
         <h3>This site</h3>
-        <p>The <a href="#space">Map</a> below is an embedding projector over my own career: 111 nodes scored by hand on nine dimensions, PCA in the browser, a hand-drawn knowledge graph. No libraries, one HTML file. The first thing I shipped for an audience was a fundraising site in 2010; this is the latest.</p>
+        <p>The <a href="#space">Map</a> at the top of this page is an embedding projector over my own career: 111 nodes scored by hand on nine dimensions, PCA in the browser, a hand-drawn knowledge graph. No libraries, one HTML file. The first thing I shipped for an audience was a fundraising site in 2010; this is the latest.</p>
         <p class="stack">Vanilla JS · Canvas · Render</p>
       </article>
     </div>
   </section>
 
 
-  <section id="space">
-    <div class="sec-head">
-      <div><p class="eyebrow">Map · 2000 to now</p><h2>Twenty-six years, projected</h2></div>
-      <p>Every job, project, paper, talk, tool, and sport, scored by hand on nine dimensions and reduced to three with principal component analysis, in your browser. Things that are close here are close in kind: the pharmacy years sit on one side, the language models on the other, and terminology work runs between them. Drag to rotate. Click a point for what it links to and what it sits nearest. Scrub the year to watch it fill in, or press Tour.</p>
-    </div>
-    <div class="space">
-      <div class="stage">
-        <canvas id="space-canvas" aria-label="Interactive 3-D map of John Doole's career, roles and projects as points in an embedding space"></canvas>
-        <div class="hud"><p class="eyebrow">PCA · 9 → 3 · <b id="space-count"></b></p><p class="eyebrow" id="space-var"></p></div>
-        <div class="ctl" aria-label="Map controls"><button type="button" data-z="in" aria-label="Zoom in">+</button><button type="button" data-z="out" aria-label="Zoom out">−</button><button type="button" data-z="reset" aria-label="Reset view">⟲</button><button type="button" id="space-fs" aria-label="Full screen" title="Full screen">⤢</button></div>
-        <p class="hint">drag · rotate &nbsp; ⌘ + scroll · zoom &nbsp; click · inspect</p>
-        <div class="bar-ctl">
-          <div class="yr"><button type="button" class="play" id="space-play" aria-label="Play the years">▶</button><input type="range" id="space-year" min="2000" max="2026" step="1" value="2026" aria-label="Show items through this year"><span class="ylab" id="space-year-label">through now</span></div>
-          <span class="seg" role="group" aria-label="Layout"><button type="button" data-layout="pca" aria-pressed="true">Similarity</button><button type="button" data-layout="time" aria-pressed="false">Timeline</button></span>
-          <button type="button" id="space-links" aria-pressed="true">Links</button>
-          <button type="button" id="space-tour" aria-pressed="false">Tour</button>
-        </div>
-      </div>
-      <div class="panel">
-        <div class="legend" id="space-legend" aria-label="Filter by kind"></div>
-        <input type="search" id="space-search" placeholder="search the map: rxnorm, llm, amia, crossfit…" aria-label="Search the map" autocomplete="off">
-        <div id="space-detail"></div>
-      </div>
-    </div>
-  </section>
 
   <section class="contact" id="contact">
     <p class="eyebrow">Contact</p>
