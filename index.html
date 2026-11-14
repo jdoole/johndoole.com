@@ -162,6 +162,8 @@
   .proj:hover { border-color: var(--accent); transform: translateY(-2px); }
   @media (prefers-reduced-motion: reduce) { .proj, .proj:hover { transition: none; transform: none; } }
   .proj h3 { font-family: var(--display); font-weight: 600; font-size: 1.35rem; letter-spacing: -0.02em; margin: 0; }
+  .proj h3 a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--rule); }
+  .proj h3 a:hover { border-bottom-color: var(--accent-ink); }
   .proj p { margin: 0; color: var(--muted); font-size: 0.95rem; }
   .proj .stack { font-family: var(--mono); font-size: 0.74rem; color: var(--accent-ink); margin-top: 6px; }
 
@@ -303,7 +305,7 @@
       <img class="portrait" src="img/john.jpg" alt="John Doole" width="576" height="720" loading="eager" decoding="async">
       <div class="row"><b>Currently</b>Clinical Notes Program Lead, TriNetX</div>
       <div class="row"><b>Before</b>Director of Informatics · Partners HealthCare · Mass General · Boston Medical Center</div>
-      <div class="row"><b>Also</b>MFA in nonfiction. Applied Agentic AI, MIT Professional Education. Coached CrossFit and Olympic weightlifting for a decade. Builds iOS apps on weekends; the latest is patent pending and in final App Store review.</div>
+      <div class="row"><b>Also</b>MFA in nonfiction. Applied Agentic AI, MIT Professional Education. Coached CrossFit and Olympic weightlifting for a decade. Builds iOS apps on weekends; the latest, <a href="https://apps.apple.com/us/app/lice-lens/id6754163018" target="_blank" rel="noopener">Lice Lens</a>, is patent pending and on the App Store.</div>
     </div>
   </header>
 
@@ -412,7 +414,7 @@
     <div class="pubs-head"><p class="eyebrow">Talks · posters</p></div>
     <ul class="pubs">
       <li><span class="yr">2026</span><div><cite>AMIA 2026 Annual Symposium</cite><span>Live demonstration of an LLM clinical note-search copilot inside a research query builder.</span></div></li>
-      <li><span class="yr">2026</span><div><cite>ISPOR Europe 2026, Vienna</cite><span>NLP-derived real-world data, booth demonstration.</span></div></li>
+      <li><span class="yr">2026</span><div><cite>AMIA 2026 Annual Symposium, poster</cite><span>Enhancing laboratory data harmonization with a multistep NLP approach that uses test-result information to map local lab tests to LOINC. Presented November 2026.</span></div></li>
       <li><span class="yr">2026</span><div><cite>AMIA Informatics Partnership Council webinar</cite><span>Careers in the secondary use of clinical data for research. Co-presenter, February 2026.</span></div></li>
       <li><span class="yr">2025</span><div><cite>AMIA 2025 Annual Symposium, poster</cite><span>Structured codes plus keyword search over clinical notes: how much a research cohort grows when the two are combined.</span></div></li>
       <li><span class="yr">2024</span><div><cite>AMIA 2024 Annual Symposium, poster</cite><span>Leveraging LLMs for rapid cross-lingual transfer learning in on-premise clinical NLP models. Co-author.</span></div></li>
@@ -429,9 +431,9 @@
     </div>
     <div class="projects">
       <article class="proj">
-        <p class="eyebrow">iOS · computer vision · patent pending</p>
-        <h3>LiceLens</h3>
-        <p>Screens photos for head lice with an on-device model. I built the dataset, trained and evaluated the model, wrote the app and its narrated tutorial, and filed the utility patent application in October 2026. In final App Store review, releasing October 2026.</p>
+        <p class="eyebrow">iOS · computer vision · patent pending · on the App Store</p>
+        <h3><a href="https://apps.apple.com/us/app/lice-lens/id6754163018" target="_blank" rel="noopener">Lice Lens</a></h3>
+        <p>Screens photos for head lice with an on-device model. I built the dataset, trained and evaluated the model, wrote the app and its narrated tutorial, and filed the utility patent application in October 2026. Released on the App Store in November 2026.</p>
         <p class="stack">Swift · SwiftUI · Core ML · PyTorch</p>
       </article>
       <article class="proj">
@@ -638,14 +640,14 @@
       ['deid', 'nlp', 'De-identification design', '2026', 2026, 'A design for de-identifying the whole note corpus.', 0, [0, .3, 0, .8, .5, .4, .2, 0, 0]],
       ['agentkit', 'nlp', 'English to platform query', '2026', 2026, 'An agent workflow that turns pasted inclusion criteria into platform codes, with guardrails and a domain classifier.', 0, [0, .6, 0, .9, .2, .9, .1, 0, 0]],
       ['amia26', 'nlp', 'AMIA 2026 live demonstration', '2026', 2026, 'The note-search copilot, live, in front of informaticians.', 0, [0, .2, 0, .9, .5, .3, .4, .4, 0]],
-      ['ispor26', 'nlp', 'ISPOR Europe 2026, Vienna', '2026', 2026, 'NLP-derived real-world data, booth demonstration.', 0, [0, .3, 0, .8, .6, .1, .3, .3, 0]],
+      ['amia26poster', 'res', 'Lab data harmonization with multistep NLP', '2026', 2026, 'AMIA 2026 Annual Symposium poster: mapping local laboratory tests to LOINC with a multistep NLP approach that uses test-result information. Presented November 2026.', 0, [0, .5, 0, .6, .2, .3, .9, .2, 0]],
       ['webinar', 'teach', 'AMIA careers webinar', '2026', 2026, 'Co-presented an AMIA Informatics Partnership Council webinar on careers in the secondary use of clinical data, February 2026.', 0, [.1, .3, 0, .4, .3, 0, .2, 1, 0]],
       ['mit', 'nlp', 'MIT Professional Education, Applied Agentic AI', '2025', 2025, 'Agents, tools, evaluation.', 1, [0, 0, 0, .9, .2, .6, .2, .3, 0]],
       ['databricks', 'nlp', 'Databricks · Model Serving · Vector Search', '2024 –', 2024, 'Where the prototypes run.', 0, [0, .2, 0, .8, .1, 1, 0, 0, 0]],
       ['es', 'nlp', 'Elasticsearch', '2022 –', 2022, 'The index under note search.', 0, [0, .3, 0, .7, 0, 1, 0, 0, 0]],
       ['python', 'nlp', 'Python · FastAPI · PySpark · SQL', '2018 –', 2018, 'The daily tools.', 0, [0, .3, 0, .5, 0, 1, 0, 0, 0]],
       ['localllm', 'build', 'Local models: Ollama, litellm, LangGraph', '2024 –', 2024, 'Running open models at home and learning the agent frameworks before using them at work.', 0, [0, 0, 0, .8, 0, .9, .1, .2, 0]],
-      ['licelens', 'build', 'LiceLens', '2025 – 2026', 2025, 'iOS app that screens scalp and comb images for head lice with an on-device model. Submitted to App Review October 2026.', 1, [.3, 0, 0, .5, .3, 1, .3, .1, 0]],
+      ['licelens', 'build', 'LiceLens', '2025 – 2026', 2025, 'iOS app that screens photos for head lice with an on-device model. Released on the App Store, November 2026.', 1, [.3, 0, 0, .5, .3, 1, .3, .1, 0]],
       ['licemodel', 'build', 'LiceLens dataset and Core ML model', '2025 – 2026', 2025, 'Built the dataset, trained and evaluated the model, shipped it on-device.', 0, [.2, .1, 0, .6, .1, 1, .4, 0, 0]],
       ['patent', 'build', 'Patent application, LiceLens', '2025 – 2026', 2025, 'Provisional filed October 2025; utility application filed October 2026. Patent pending.', 0, [.2, 0, 0, .4, .6, .4, .5, 0, 0]],
       ['tutorial', 'build', 'Narrated app tutorial', '2026', 2026, 'A voiced walkthrough over real app screens.', 0, [0, 0, 0, .3, .2, .8, 0, .6, 0]],
@@ -679,9 +681,9 @@
       ['cnplead', 'oncopipe'], ['cnplead', 'perfpipe'], ['cnplead', 'cardiopipe'], ['oncopipe', 'accuracy'], ['perfpipe', 'accuracy'], ['cardiopipe', 'accuracy'], ['accuracy', 'gapaudit'], ['accuracy', 'explorer'],
       ['strategicmeds', 'epicrx'], ['strategicmeds', 'jbi2025'], ['harmon', 'jbi2025'], ['rxnorm', 'jbi2025'], ['epicrx', 'n8n'],
       ['n8n', 'agentkit'], ['n8n', 'slackbot'], ['localllm', 'n8n'], ['mit', 'agentkit'], ['mit', 'rfi'], ['mit', 'copilot'],
-      ['copilot', 'amia26'], ['copilot', 'es'], ['copilot', 'databricks'], ['copilot', 'ispor26'], ['assertion', 'negation'], ['assertion', 'databricks'], ['negation', 'perfpipe'],
+      ['copilot', 'amia26'], ['copilot', 'es'], ['copilot', 'databricks'], ['assertion', 'negation'], ['assertion', 'databricks'], ['negation', 'perfpipe'],
       ['vec2text', 'deid'], ['presidio', 'deid'], ['deid', 'governance'], ['media', 'slackbot'], ['rfi', 'governance'],
-      ['cnplead', 'webinar'], ['cnplead', 'amia26'], ['cnplead', 'ispor26'],
+      ['cnplead', 'webinar'], ['cnplead', 'amia26'], ['cnplead', 'amia26poster'], ['harmon', 'amia26poster'], ['rxnorm', 'amia26poster'],
       ['licelens', 'licemodel'], ['licelens', 'patent'], ['licelens', 'tutorial'], ['licelens', 'swift'], ['licemodel', 'swift'], ['mfa', 'tutorial'],
       ['pawtriarchy', 'python'], ['pawtriarchy', 'mfa'], ['compmastery', 'mit'], ['coderx', 'python']
     ];
@@ -742,7 +744,7 @@
       ['coach', 'copilot', 'Coaching and NLP are the same job. A snatch clinic and a model spec both break something complex into cues another person can execute, then watch where they fail and fix the cue.'],
       ['nutrition', 'harmon', 'Bedside and terminology. Writing parenteral nutrition orders taught me what a dose looks like in the wild. Mapping medication strings to RxNorm is the same string, fifteen years later.'],
       ['mfa', 'pilotlaunch', 'Writing and product. The MFA is the reason the launch brief got read. Pricing went through sign-off on a document, not in a meeting.'],
-      ['runforstroke', 'licelens', 'First thing shipped, latest thing shipped. A fundraising site with videos in 2010; an App Store submission in 2026. Same instinct: build it yourself and put it in front of people.'],
+      ['runforstroke', 'licelens', 'First thing shipped, latest thing shipped. A fundraising site with videos in 2010; an App Store release in 2026. Same instinct: build it yourself and put it in front of people.'],
       ['medsafety', 'accuracy', 'Medication safety and NLP accuracy are one discipline. Tracking medication errors at BMC and tracking pipeline precision both come down to measure, reconcile, fix.'],
       ['ddi', 'negation', 'Decision support and assertion. A drug-interaction alert is a rule about context. So is deciding that "denies chest pain" is not chest pain.'],
       ['box', 'cnpagree', 'Running a gym and running a program. The BOX seminar was about an affiliate as a business. The program agreements were the same lesson, with lawyers.'],
