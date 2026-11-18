@@ -177,16 +177,17 @@
   :root { --c-pharm: #d9480f; --c-info: #2a4bff; --c-nlp: #0b9c87; --c-build: #c2255c; --c-res: #d99a00; --c-teach: #7048e8; --c-fit: #5c9e0a; }
   @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --c-pharm: #ff8a4c; --c-info: #7a93ff; --c-nlp: #3fd1b9; --c-build: #ff6b9d; --c-res: #ffc93c; --c-teach: #a98bff; --c-fit: #a3e635; } }
   :root[data-theme="dark"] { --c-pharm: #ff8a4c; --c-info: #7a93ff; --c-nlp: #3fd1b9; --c-build: #ff6b9d; --c-res: #ffc93c; --c-teach: #a98bff; --c-fit: #a3e635; }
-  .space { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); border: 1px solid var(--rule); background: var(--panel); border-radius: 8px; overflow: hidden; }
+  .space { display: grid; grid-template-columns: minmax(0, 9fr) minmax(0, 3.6fr); border: 1px solid var(--rule); background: var(--panel); border-radius: 8px; overflow: hidden; }
   @media (max-width: 960px) { .space { grid-template-columns: 1fr; } }
+  @media (min-width: 1300px) { #space .space, #space .read { margin-inline: calc((min(100vw - 64px, 1680px) - 100%) / -2); } }
   .space { align-items: start; }
   .space .stage { position: relative; min-width: 0; display: grid; border-right: 1px solid var(--rule); background:
       radial-gradient(ellipse at 50% 40%, color-mix(in srgb, var(--accent-soft) 55%, transparent), transparent 70%); }
   @media (max-width: 960px) { .space .stage { border-right: 0; border-bottom: 1px solid var(--rule); } }
-  .space canvas { display: block; width: 100%; height: 620px; cursor: grab; touch-action: none; }
+  .space canvas { display: block; width: 100%; height: 700px; cursor: grab; touch-action: none; }
   .space canvas.drag { cursor: grabbing; }
   .space canvas.pt { cursor: pointer; }
-  @media (max-width: 960px) { .space canvas { height: 460px; } }
+  @media (max-width: 960px) { .space canvas { height: 500px; } }
   .space .hud { position: absolute; left: 16px; top: 14px; right: 16px; display: flex; justify-content: space-between; gap: 12px; pointer-events: none; }
   .space .hud .eyebrow { pointer-events: auto; }
   .space .ctl { position: absolute; right: 12px; bottom: 12px; display: flex; gap: 6px; }
@@ -210,6 +211,19 @@
   .space:fullscreen canvas, .space.fs canvas { height: 100vh; height: 100dvh; }
   .space:fullscreen .panel, .space.fs .panel { max-height: 100vh; max-height: 100dvh; padding-top: max(20px, env(safe-area-inset-top, 0px)); }
   @media (max-width: 960px) { .space:fullscreen, .space.fs { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) minmax(0, 42vh); } .space:fullscreen canvas, .space.fs canvas { height: 100%; } .space:fullscreen .panel, .space.fs .panel { max-height: none; } }
+  .space .cap { position: absolute; left: 16px; top: 44px; max-width: min(460px, calc(100% - 32px)); pointer-events: none; opacity: 0; transform: translateY(4px); transition: opacity .35s, transform .35s; }
+  .space .cap.on { opacity: 1; transform: none; }
+  .space .cap .y { font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-ink); }
+  .space .cap .t { font-family: var(--display); font-weight: 600; font-size: clamp(1.15rem, 2.2vw, 1.6rem); letter-spacing: -0.02em; line-height: 1.15; margin-top: 4px; color: var(--fg); text-shadow: 0 0 12px var(--panel), 0 0 4px var(--panel); }
+  .space .cap .k { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 0.72rem; color: var(--muted); margin-top: 6px; }
+  .space .cap .k i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+  .space .cap .s { font-family: var(--mono); font-size: 0.7rem; color: var(--faint); margin-top: 8px; }
+  @media (max-width: 640px) { .space .cap { top: 62px; } .space .cap .s { display: none; } .space .cap .t { font-size: 1.1rem; } }
+  .read { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px 28px; margin: 0 0 18px; padding: 0; list-style: none; }
+  .read li { font-size: 0.95rem; color: var(--muted); line-height: 1.4; padding-left: 14px; border-left: 2px solid var(--accent); }
+  .read li b { color: var(--fg); font-weight: 600; }
+  @media (max-width: 960px) { .read { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .read { grid-template-columns: 1fr; } }
   .space .bridges { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
   .space .bridges .lab { font-family: var(--mono); font-size: 0.72rem; color: var(--faint); margin: 6px 0 2px; letter-spacing: 0.08em; text-transform: uppercase; }
   .space .bridges button { width: 100%; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 10px; border: 1px solid var(--rule); border-radius: 6px; background: transparent; color: var(--fg); text-align: left; padding: 9px 11px; font: inherit; font-size: 0.88rem; cursor: pointer; }
@@ -230,7 +244,7 @@
   .space .mini:hover { border-color: var(--accent); color: var(--accent-ink); }
   .space .mini[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
   @media (max-width: 640px) { .space .hint { display: none; } .space .ctl { bottom: 100px; } }
-  .space .panel { min-width: 0; padding: 20px 22px 22px; display: grid; gap: 16px; align-content: start; font-size: 0.93rem; max-height: 620px; overflow-y: auto; overscroll-behavior: contain; }
+  .space .panel { min-width: 0; padding: 20px 22px 22px; display: grid; gap: 16px; align-content: start; font-size: 0.93rem; max-height: 700px; overflow-y: auto; overscroll-behavior: contain; }
   @media (max-width: 960px) { .space .panel { max-height: none; } }
   .space .legend { display: flex; flex-wrap: wrap; gap: 6px; }
   .space .legend button { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--rule); background: transparent; color: var(--muted); border-radius: 999px; padding: 5px 11px 5px 8px; font-family: var(--mono); font-size: 0.72rem; cursor: pointer; }
@@ -337,12 +351,19 @@
   <section id="space">
     <div class="sec-head">
       <div><p class="eyebrow">Map · 2000 to now</p><h2>Twenty-six years, projected</h2></div>
-      <p>Every job, project, paper, talk, tool, and sport, scored by hand on nine dimensions and reduced to three with principal component analysis, in your browser. Things that are close here are close in kind: the pharmacy years sit on one side, the language models on the other, and terminology work runs between them. Drag to rotate. Click a point for what it links to and what it sits nearest. Scrub the year to watch it fill in, or press Tour.</p>
+      <p>A map of my career, built the way AI systems map words and documents. I scored each job, project, paper and talk on nine kinds of work, and the math places similar things near each other. The pharmacy years end up on one side, the language-model work on the other, and terminology runs between them. It starts with a short tour; click anywhere to take over.</p>
     </div>
+    <ul class="read" aria-label="How to read the map">
+      <li><b>Each dot</b> is one thing I did: a job, project, paper, talk or tool.</li>
+      <li><b>Close together</b> means similar work. Far apart means different work.</li>
+      <li><b>Colors</b> are kinds of work. <b>Lines</b> connect things that led to each other.</li>
+      <li><b>Drag</b> to spin it, <b>click</b> a dot for details, or press <b>Tour</b>.</li>
+    </ul>
     <div class="space">
       <div class="stage">
         <canvas id="space-canvas" aria-label="Interactive 3-D map of John Doole's career, roles and projects as points in an embedding space"></canvas>
         <div class="hud"><p class="eyebrow">PCA · 9 → 3 · <b id="space-count"></b></p><p class="eyebrow" id="space-var"></p></div>
+        <div class="cap" id="space-cap" aria-live="polite"></div>
         <div class="ctl" aria-label="Map controls"><button type="button" data-z="in" aria-label="Zoom in">+</button><button type="button" data-z="out" aria-label="Zoom out">−</button><button type="button" data-z="reset" aria-label="Reset view">⟲</button><button type="button" id="space-fs" aria-label="Full screen" title="Full screen">⤢</button></div>
         <p class="hint">drag · rotate &nbsp; ⌘ + scroll · zoom &nbsp; click · inspect</p>
         <div class="bar-ctl">
@@ -882,12 +903,13 @@
       if (!dragging) {
         yaw += vyaw; pitch += vpitch; vyaw *= 0.93; vpitch *= 0.93;
         idleT += dt;
-        if (!reduce && idleT > 2500 && selected < 0 && !pair && hover < 0 && !query && !tour && !playing) yaw += 0.00018 * dt;
+        if (!reduce && idleT > 1200 && selected < 0 && !pair && hover < 0 && !query && !tour && !playing) yaw += 0.0004 * dt;
+        if (!reduce && tour) yaw += 0.00035 * dt;
         pitch = Math.max(-1.3, Math.min(1.3, pitch));
       }
       if (Math.abs(mixTarget - mix) > 0.001) { mix += (mixTarget - mix) * (reduce ? 1 : 0.12); busy = true; } else mix = mixTarget;
       if (playing) { playing.acc += dt; if (playing.acc > 650) { playing.acc = 0; setYear(year + 1); if (year >= Y1) stopPlay(); } busy = true; }
-      if (tour) { tour.acc += dt; if (tour.acc > 3600) { tour.acc = 0; tourStep(); } busy = true; }
+      if (tour) { tour.acc += dt; if (tour.acc > 2400) { tour.acc = 0; tourStep(); } busy = true; }
       draw();
       ticking = false;
       if (visible && (busy || wantWake || !reduce || dragging || Math.abs(vyaw) + Math.abs(vpitch) > 0.0002)) raf = requestAnimationFrame(tick);
@@ -986,11 +1008,17 @@
       tour.n = (tour.n + 1) % TOUR.length; var idx = TOUR[tour.n];
       setYear(ITEMS[idx].start); selectQuiet(idx);
       if (tour.n === TOUR.length - 1) setYear(Y1);
+      var it = ITEMS[idx];
+      capEl.innerHTML = '<div class="y">Tour · ' + esc(it.years) + ' · ' + (tour.n + 1) + ' of ' + TOUR.length + '</div><div class="t">' + esc(it.label) + '</div>' +
+        '<div class="k"><i style="background:' + colors[it.cat] + '"></i>' + esc(CATS[it.cat].name) + '</div><div class="s">click or drag the map to explore on your own</div>';
+      capEl.classList.add('on');
     }
-    function stopTour() { if (!tour) return; tour = null; tourBtn.setAttribute('aria-pressed', 'false'); tourBtn.textContent = 'Tour'; }
+    var capEl = document.getElementById('space-cap'), userTouched = false, autoToured = false;
+    function stopTour() { capEl.classList.remove('on'); if (!tour) return; tour = null; tourBtn.setAttribute('aria-pressed', 'false'); tourBtn.textContent = 'Tour'; }
+    function startTour() { stopPlay(); tour = { n: -1, acc: 0 }; tourBtn.setAttribute('aria-pressed', 'true'); tourBtn.textContent = 'Stop tour'; tourStep(); wake(); }
     tourBtn.addEventListener('click', function () {
       if (tour) { stopTour(); wake(); return; }
-      stopPlay(); tour = { n: -1, acc: 0 }; tourBtn.setAttribute('aria-pressed', 'true'); tourBtn.textContent = 'Stop'; tourStep(); wake();
+      startTour();
     });
 
     // ---- panel ----
@@ -1059,6 +1087,8 @@
     new MutationObserver(function () { readTheme(); wake(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(function (es) { es.forEach(function (en) { visible = en.isIntersecting; if (visible) wake(); }); }, { threshold: 0.1 }).observe(canvas);
+      ['pointerdown', 'keydown', 'wheel'].forEach(function (ev) { spaceEl.addEventListener(ev, function () { userTouched = true; }, { passive: true }); });
+      if (!reduce) new IntersectionObserver(function (es, ob) { es.forEach(function (en) { if (en.isIntersecting && !autoToured) { autoToured = true; ob.disconnect(); if (!userTouched && !tour) startTour(); } }); }, { threshold: 0.35 }).observe(canvas);
     } else wake();
   })();
 </script>
